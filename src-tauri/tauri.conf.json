@@ -14,7 +14,9 @@
       {
         "title": "Volkanic Console",
         "width": 800,
-        "height": 450
+        "height": 500,
+        "minWidth": 800,
+        "minHeight": 500
       }
     ],
     "security": {
