@@ -3,4 +3,5 @@ export interface AppState {
   instances: [];
   selectedRunner?: string;
   selectedInstance?: string;
+  settingsOpen: boolean;
 }

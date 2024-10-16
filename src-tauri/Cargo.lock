@@ -2956,6 +2956,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_jsonc"
+version = "1.0.108"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7a58154381df481a41b7536101c0daccdaf2426f244334074c4c77b89b6253a7"
+dependencies = [
+ "itoa 1.0.11",
+ "ryu",
+ "serde",
+]
+
+[[package]]
 name = "serde_repr"
 version = "0.1.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3693,7 +3704,19 @@ dependencies = [
  "mio",
  "pin-project-lite",
  "socket2",
+ "tokio-macros",
  "windows-sys 0.52.0",
+]
+
+[[package]]
+name = "tokio-macros"
+version = "2.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "693d596312e88961bc67d7f1f97af8a70227d9f90c31bba5806eec004978d752"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.79",
 ]
 
 [[package]]
@@ -3989,9 +4012,11 @@ checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
 name = "volkanic-console"
 version = "0.1.0"
 dependencies = [
+ "dirs",
  "reqwest",
  "serde",
  "serde_json",
+ "serde_jsonc",
  "tauri",
  "tauri-build",
  "tauri-plugin-shell",

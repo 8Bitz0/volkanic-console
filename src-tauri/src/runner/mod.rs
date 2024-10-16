@@ -8,6 +8,12 @@ use http::new_client;
 
 const SUPPORTED_PROTOCOL: u64 = 1;
 
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct Runner {
+    pub name: String,
+    pub url: String,
+}
+
 pub struct RunnerClient {
     url: String,
     disconnect_tx: broadcast::Sender<String>,

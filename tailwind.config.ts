@@ -5,8 +5,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        intro: 'Roboto, sans-serif',
-        sans: 'Roboto, sans-serif',
+        sans: 'Inter, Roboto, sans-serif',
       },
     }
   },
