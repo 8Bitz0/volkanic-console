@@ -1,4 +1,4 @@
 export interface Runner {
-    id: String;
-    name: String;
+  id: String;
+  name: String;
 }

@@ -1,6 +1,9 @@
+import type { Instance } from "./Instance";
+import type { Runner } from "./Runner";
+
 export interface AppState {
-  runners: [];
-  instances: [];
+  runners: Runner[];
+  instances: Instance[];
   selectedRunner?: string;
   selectedInstance?: string;
   settingsOpen: boolean;

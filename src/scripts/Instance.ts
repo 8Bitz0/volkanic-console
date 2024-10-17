@@ -1,14 +1,15 @@
 export interface Instance {
   id: string;
   name: string;
+  type: InstanceType;
 }
 
 export type InstanceType = {
-  Volkanic: {
+  volkanic: {
     source: VolkanicSource
   }
 }
 
 export type VolkanicSource =
-  | { Url: [string] }
-  | { Base64: [string] };
+  | { url: [string] }
+  | { base64: [string] };
