@@ -37,11 +37,6 @@
 
 <div class="flex flex-col w-72 bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
   <div class="flex flex-col w-full max-h-[90%] gap-2 p-3">
-    <InstanceButton>
-      <Icon icon="mdi:play-outline" class="min-w-max" />
-      <p class="text-sm text-nowrap">Runners</p>
-    </InstanceButton>
-    <div class="h-2" />
     <div class="flex flex-col w-full gap-1 overflow-y-hidden border-[1px] rounded-lg border-zinc-200 dark:border-zinc-800">
       {#if selectedInstance !== null}
         <InstanceButton active={false}>

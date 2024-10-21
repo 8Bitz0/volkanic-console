@@ -17,6 +17,9 @@ pub struct AppState {
 pub async fn run() {
     let r = tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
+        .invoke_handler(tauri::generate_handler![
+            host_platform
+        ])
         .run(tauri::generate_context!());
 
     match r {
@@ -25,4 +28,15 @@ pub async fn run() {
             eprintln!("An error occurred while Volkanic Console was running: {}", e);
         }
     }
+}
+
+/// Returns the platform compiled for
+#[tauri::command]
+async fn host_platform() -> String {
+    #[cfg(target_os = "windows")]
+    {"windows".to_string()}
+    #[cfg(target_os = "macos")]
+    {"macos".to_string()}
+    #[cfg(target_os = "linux")]
+    {"linux".to_string()}
 }

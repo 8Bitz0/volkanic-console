@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0.0",
-  "productName": "volkanic-console",
+  "productName": "Volkanic Console",
   "version": "0.1.0",
   "identifier": "me.bitzero.volkanic-console",
   "build": {
