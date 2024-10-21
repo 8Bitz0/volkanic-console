@@ -7,4 +7,5 @@ export interface AppState {
   selectedRunner?: string;
   selectedInstance?: string;
   settingsOpen: boolean;
+  newInstanceModal: boolean;
 }

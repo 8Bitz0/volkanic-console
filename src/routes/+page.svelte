@@ -2,6 +2,7 @@
   import "../app.css";
 
   import InstanceBar from "./InstanceBar.svelte";
+  import NewInstanceModal from "./NewInstanceModal.svelte";
   import PageView from "./PageView.svelte";
   import SettingsPage from "./SettingsPage.svelte";
   import TitleBar from "./TitleBar.svelte";
@@ -24,7 +25,8 @@
       }
     ],
     selectedInstance: "",
-    settingsOpen: false
+    settingsOpen: false,
+    newInstanceModal: false
   };
 </script>
 
@@ -42,4 +44,7 @@
       </div>
     {/if}
   </div>
+  {#if state.newInstanceModal}
+    <NewInstanceModal bind:state />
+  {/if}
 </div>
