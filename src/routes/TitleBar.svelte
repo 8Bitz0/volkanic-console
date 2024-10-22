@@ -71,14 +71,14 @@
     {#if buttonStyle == "windows"}
       <div class="absolute flex flex-row right-0" style="height: {height}px;">
         <button
-          class="flex flex-col w-12 items-center justify-center bg-black dark:bg-white bg-opacity-0 dark:bg-opacity-0 hover:bg-opacity-10 transition-all duration-75"
+          class="flex flex-col w-12 z-40 items-center justify-center bg-black dark:bg-white bg-opacity-0 dark:bg-opacity-0 hover:bg-opacity-10 transition-all duration-75 cursor-default"
           style="height: {height - 2}px;"
           on:click={minimizeWindow}
         >
           <Icon icon="fluent:minimize-12-regular" class="w-4" />
         </button>
         <button
-          class="flex flex-col w-12 items-center justify-center bg-black dark:bg-white bg-opacity-0 dark:bg-opacity-0 hover:bg-opacity-10 transition-all duration-75"
+          class="flex flex-col w-12 z-40 items-center justify-center bg-black dark:bg-white bg-opacity-0 dark:bg-opacity-0 hover:bg-opacity-10 transition-all duration-75 cursor-default"
           style="height: {height - 2}px;"
 
           on:click={maximizeWindow}
@@ -90,7 +90,7 @@
           {/if}
         </button>
         <button
-          class="flex flex-col w-12 group items-center justify-center hover:bg-red-500 transition-all duration-75"
+          class="flex flex-col w-12 z-40 group items-center justify-center hover:bg-red-500 transition-all duration-75 cursor-default"
           style="height: {height - 2}px;"
           on:click={closeWindow}
         >
