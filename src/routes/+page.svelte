@@ -26,12 +26,13 @@
     ],
     selectedInstance: "",
     settingsOpen: false,
-    newInstanceModal: false
+    newInstanceModal: false,
+    titleBarEnabled: false,
   };
 </script>
 
 <div class="absolute flex flex-col w-full h-full bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50">
-  <TitleBar />
+  <TitleBar bind:state />
   <div class="flex flex-row w-full h-full flex-grow">
     {#if state.settingsOpen}
       <div class="w-full h-full">
@@ -40,7 +41,7 @@
     {:else}
       <div class="flex flex-row w-full h-full">
         <InstanceBar bind:state />
-        <PageView />
+        <PageView bind:state />
       </div>
     {/if}
   </div>

@@ -8,7 +8,7 @@ export default {
     extend: {
       fontFamily: {
         sans: 'Inter, Roboto, sans-serif',
-        windowTitle: '-apple-system'
+        windowTitle: '-apple-system, Segoe UI, sans-serif'
       },
     }
   },
