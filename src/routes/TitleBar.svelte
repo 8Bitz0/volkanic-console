@@ -23,10 +23,10 @@
 
 <div class="bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
   {#if enabled}
-    <div data-tauri-drag-region class="absolute flex flex-row w-full h-[{height}px] justify-end right-0 translate-x-5 overflow-hidden">
+    <div data-tauri-drag-region class="absolute flex flex-row w-full justify-end right-0 translate-x-5 overflow-hidden" style="height: {height}px;">
       <div data-tauri-drag-region class="w-64 h-full blur-[128px] bg-green-500" />
     </div>
-    <div data-tauri-drag-region class="h-[{height}px] {additionalClasses}">
+    <div data-tauri-drag-region class="{additionalClasses}" style="height: {height}px;">
       <div data-tauri-drag-region class="flex flex-row w-full h-full items-center justify-center {additionalLogoClasses}">
         <img
           data-tauri-drag-region
