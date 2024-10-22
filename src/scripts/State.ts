@@ -8,5 +8,6 @@ export interface AppState {
   selectedInstance?: string;
   settingsOpen: boolean;
   newInstanceModal: boolean;
+  newRunnerModal: boolean;
   titleBarEnabled: boolean;
 }

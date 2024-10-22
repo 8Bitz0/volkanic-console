@@ -18,7 +18,8 @@ pub async fn run() {
     let r = tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
-            host_platform
+            host_platform,
+            cmd::runner::runner_info,
         ])
         .run(tauri::generate_context!());
 

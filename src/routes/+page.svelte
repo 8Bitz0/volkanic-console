@@ -3,6 +3,7 @@
 
   import InstanceBar from "./InstanceBar.svelte";
   import NewInstanceModal from "./NewInstanceModal.svelte";
+  import NewRunnerModal from "./NewRunnerModal.svelte";
   import PageView from "./PageView.svelte";
   import SettingsPage from "./SettingsPage.svelte";
   import TitleBar from "./TitleBar.svelte";
@@ -27,6 +28,7 @@
     selectedInstance: "",
     settingsOpen: false,
     newInstanceModal: false,
+    newRunnerModal: false,
     titleBarEnabled: false,
   };
 </script>
@@ -47,5 +49,8 @@
   </div>
   {#if state.newInstanceModal}
     <NewInstanceModal bind:state />
+  {/if}
+  {#if state.newRunnerModal}
+    <NewRunnerModal bind:state />
   {/if}
 </div>

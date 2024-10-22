@@ -16,6 +16,10 @@
     state.newInstanceModal = true;
   }
 
+  function addRunner() {
+    state.newRunnerModal = true;
+  }
+
   let selectedInstance: Instance | null = null;
   let shownInstances: Instance[] = [];
 
@@ -88,6 +92,13 @@
       <Icon icon="mdi:plus" class="min-w-max" />
         <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">New Instance</p>
         <div class="flex-grow" />
+    </InstanceButton>
+    <InstanceButton
+      onClick={addRunner}
+    >
+      <Icon icon="mdi:plus" class="min-w-max text-zinc-500" />
+      <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis text-zinc-500">New Runner</p>
+      <div class="flex-grow" />
     </InstanceButton>
   </div>
 </div>

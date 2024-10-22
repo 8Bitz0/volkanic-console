@@ -16,7 +16,7 @@ pub enum RunnerModeInterface {
 }
 
 #[tauri::command]
-async fn runner_info(url: String) -> Result<RunnerInfoInterface, String> {
+pub async fn runner_info(url: String) -> Result<RunnerInfoInterface, String> {
     let info = RunnerClient::info(url).await.map_err(|e| e.to_string())?;
 
     Ok(RunnerInfoInterface {
