@@ -41,7 +41,7 @@
 
 <div class="flex flex-col w-72 bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
   <div class="flex flex-col w-full max-h-[90%] gap-2 p-3">
-    <div class="flex flex-col w-full gap-1 overflow-y-hidden border-[1px] rounded-lg border-zinc-200 dark:border-zinc-800">
+    <div class="flex flex-col w-full gap-1 overflow-y-hidden border-[1px] rounded-lg border-zinc-300 dark:border-zinc-700">
       {#if selectedInstance !== null}
         <InstanceButton active={false}>
           <Icon icon="mdi:cube-outline" class="min-w-max" />
@@ -51,12 +51,12 @@
             <div class="w-1 min-w-max h-1 rounded-full bg-green-400 dark:bg-green-500" />
           </div>
         </InstanceButton>
-        <div class="flex flex-row h-8 gap-[1px] pt-[1px] i bg-zinc-200 dark:bg-zinc-800">
+        <div class="flex flex-row h-8 gap-[1px] pt-[1px] i bg-zinc-300 dark:bg-zinc-700">
           <button class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 active:bg-zinc-300 dark:active:bg-zinc-700 transition-all cursor-default"><Icon icon="mdi:restart" /></button>
           <button class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 active:bg-zinc-300 dark:active:bg-zinc-700 transition-all cursor-default"><Icon icon="mdi:power" /></button>
         </div>
       {:else}
-        <div class="flex flex-col w-full h-[65px] min-[65px] items-center justify-center text-zinc-400 dark:text-zinc-600">
+        <div class="flex flex-col w-full h-[65px] min-[65px] items-center justify-center text-zinc-400 dark:text-zinc-500">
           <Icon icon="mdi:cube-outline" class="w-5 h-5" />
           <p class="text-sm">No instance selected</p>
         </div>

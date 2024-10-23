@@ -12,6 +12,6 @@
   }
 </script>
 
-<div class="w-full h-full bg-zinc-50 dark:bg-zinc-950 border-l-[1px] border-t-[1px] border-zinc-200 dark:border-zinc-800 {additionalClasses}">
+<div class="w-full h-full bg-zinc-50 dark:bg-zinc-950 border-l-[1px] border-t-[1px] border-zinc-200 dark:border-zinc-700 {additionalClasses}">
 
 </div>
