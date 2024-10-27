@@ -3,19 +3,49 @@
   import { sineInOut } from "svelte/easing";
   import { blur, scale } from "svelte/transition";
 
-  import { newRunner } from "../scripts/Runner";
+  import { isValidUrl, newRunner } from "../scripts/Runner";
   import type { AppState } from "../scripts/State";
 
   export let state: AppState;
 
+  let canConnect: boolean = false;
+
+  let nameValue: string = "";
   let addressValue: string = "";
+
+  let processing: boolean = false;
+
+  $: checkDetails(nameValue, addressValue).then((v) => canConnect = v);
 
   function closeModal() {
     state.newRunnerModal = false;
   }
 
   async function connectRunner() {
-    await newRunner(state, addressValue);
+    try {
+      processing = true;
+
+      await newRunner(nameValue, addressValue);
+
+      closeModal();
+    } catch(e) {
+      console.error("Error while adding runner: " + e);
+      processing = false;
+    }
+  }
+
+  async function checkDetails(name: string, address: string): Promise<boolean> {
+    let valid: boolean = true;
+
+    if (name.length <= 0) {
+      valid = false;
+    }
+
+    if (!await isValidUrl(address)) {
+      valid = false;
+    }
+
+    return valid;
   }
 </script>
 
@@ -25,7 +55,7 @@
       <h1 class="text-xl">Add Runner</h1>
       <div>
         <p class="text-sm">Name:</p>
-        <input placeholder="My Runner" class="w-full h-8 border-[1px] border-zinc-200 dark:border-zinc-700 rounded-lg p-2 bg-zinc-50 dark:bg-zinc-800" />
+        <input placeholder="My Runner" bind:value={nameValue} class="w-full h-8 border-[1px] border-zinc-200 dark:border-zinc-700 rounded-lg p-2 bg-zinc-50 dark:bg-zinc-800" />
       </div>
       <div>
         <p class="text-sm">Address:</p>
@@ -34,17 +64,33 @@
     </div>
     <div class="flex flex-row gap-4 px-5 pb-5">
       <button
-        class="w-full h-12 rounded-lg text-zinc-600 dark:text-zinc-300 bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 hover:dark:bg-zinc-600 active:scale-95 transition-all duration-100"
+        class="w-full h-12 rounded-lg text-zinc-600 dark:text-zinc-300 bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 hover:dark:bg-zinc-600 active:scale-95 transition-all duration-100 cursor-default"
         on:click={closeModal}
       >
         Cancel
       </button>
-      <button
-        class="w-full h-12 rounded-lg text-green-600 dark:text-green-400 bg-green-200 dark:bg-green-900 hover:bg-green-300 hover:dark:bg-green-800 active:scale-95 transition-all duration-100"
-        on:click={connectRunner}
-      >
-        Connect
-      </button>
+      {#if canConnect && !processing}
+        <button
+          class="flex flex-row w-full h-12 justify-center items-center rounded-lg text-green-600 dark:text-emerald-400 bg-green-200 dark:bg-emerald-900 hover:bg-green-300 hover:dark:bg-emerald-800 active:scale-95 transition-all duration-100 cursor-default"
+          on:click={connectRunner}
+        >
+          Connect
+        </button>
+      {:else}
+        {#if !processing}
+          <button
+            class="flex flex-row w-full h-12 justify-center items-center rounded-lg text-zinc-400 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 cursor-default"
+          >
+            Connect
+          </button>
+        {:else}
+          <button
+            class="flex flex-row w-full h-12 justify-center items-center rounded-lg text-zinc-400 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 cursor-default"
+          >
+            <Icon icon="svg-spinners:3-dots-fade" class="w-6 h-6" />
+          </button>
+        {/if}
+      {/if}
     </div>
   </div>
 </div>

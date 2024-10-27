@@ -1,14 +1,19 @@
 import { invoke } from "@tauri-apps/api/core";
 
-import { type AppState } from "./State";
-
 export interface Runner {
-  id: String;
   name: String;
+  url: String;
+  connected: boolean;
 }
 
-export async function newRunner(state: AppState, url: string) {
-  let r = invoke("runner_info", { url });
+export async function newRunner(name: string, url: string) {
+  await invoke("runner_new", { name, url });
+}
 
-  alert(r);
+export async function listRunners(): Promise<Map<string, Runner>> {
+  return await invoke("runner_list")
+}
+
+export async function isValidUrl(url: string): Promise<boolean> {
+  return await invoke("is_valid_url", { url });
 }

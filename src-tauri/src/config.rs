@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, path::PathBuf};
 use tokio::{fs, io::AsyncWriteExt};
 
-use crate::runner::Runner;
+use crate::runner::RunnerConDetails;
 
 const CONF_FILE_NAME: &str = "config.json";
 const DIR_NAME: &str = "Volkanic Console";
@@ -25,13 +25,13 @@ pub enum Error {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Config {
-    pub runners: HashMap<String, Runner>,
+    pub runners: HashMap<String, RunnerConDetails>,
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
-            runners: HashMap::new()
+            runners: HashMap::new(),
         }
     }
 }
@@ -78,10 +78,13 @@ impl ConfigFile {
     pub async fn update(&self) -> Result<(), Error> {
         let mut f = fs::File::create(&self.path).await.map_err(Error::Io)?;
 
-        let mut config_raw = serde_jsonc::to_string_pretty(&self.config).map_err(Error::JsonEncode)?;
+        let mut config_raw =
+            serde_jsonc::to_string_pretty(&self.config).map_err(Error::JsonEncode)?;
         config_raw.push('\n');
 
-        f.write_all(config_raw.as_bytes()).await.map_err(Error::Io)?;
+        f.write_all(config_raw.as_bytes())
+            .await
+            .map_err(Error::Io)?;
 
         Ok(())
     }

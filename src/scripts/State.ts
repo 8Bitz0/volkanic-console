@@ -2,7 +2,7 @@ import type { Instance } from "./Instance";
 import type { Runner } from "./Runner";
 
 export interface AppState {
-  runners: Runner[];
+  runners: Map<string, Runner>;
   instances: Instance[];
   selectedRunner?: string;
   selectedInstance?: string;

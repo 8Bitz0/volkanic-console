@@ -7,8 +7,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: 'Inter, Roboto, sans-serif',
-        windowTitle: '-apple-system, Segoe UI, sans-serif'
+        sans: '-apple-system, Inter, Roboto, sans-serif',
+        windowTitle: '-apple-system, Segoe UI, sans-serif',
+        monospace: 'monospace'
       },
     }
   },

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { listen } from "@tauri-apps/api/event";
+
   import "../app.css";
 
   import InstanceBar from "./InstanceBar.svelte";
@@ -9,9 +11,11 @@
   import TitleBar from "./TitleBar.svelte";
 
   import type { AppState } from "../scripts/State";
+  import { runnerListener } from "../scripts/Event";
+  import { listRunners, type Runner } from "../scripts/Runner";
 
   let state: AppState = {
-    runners: [],
+    runners: new Map(),
     instances: [
       {
         id: "1234",
@@ -31,6 +35,18 @@
     newRunnerModal: false,
     titleBarEnabled: false,
   };
+
+  function updateRunners(runners: Map<string, Runner>) {
+    state.runners = runners;
+  }
+
+  listRunners().then((runners) => {
+    updateRunners(runners);
+  })
+
+  runnerListener((runners) => {
+    updateRunners(runners);
+  });
 </script>
 
 <div class="absolute flex flex-col w-full h-full bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50">

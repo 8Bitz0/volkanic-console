@@ -5,6 +5,7 @@
 
   import type { AppState } from "../scripts/State";
   import type { Instance } from '../scripts/Instance';
+  import type { Runner } from '../scripts/Runner';
 
   export let state: AppState;
 
@@ -22,8 +23,12 @@
 
   let selectedInstance: Instance | null = null;
   let shownInstances: Instance[] = [];
+  let shownRunners: [string, Runner][] = [];
 
   $: updateShownInstances(state.selectedInstance, state.instances);
+  $: updateShownRunners(state.runners);
+
+  $: console.log(state.runners);
 
   function updateShownInstances(selectedId: string | undefined, instances: Instance[]) {
     shownInstances = [];
@@ -36,6 +41,10 @@
         shownInstances = shownInstances;
       }
     }
+  }
+
+  function updateShownRunners(runners: Map<string, Runner>) {
+    shownRunners = Object.entries(runners);
   }
 </script>
 
@@ -93,6 +102,28 @@
         <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">New Instance</p>
         <div class="flex-grow" />
     </InstanceButton>
+    <div>
+      <p class="text-zinc-400 dark:text-zinc-600 text-[11px]">RUNNERS</p>
+      <div class="flex flex-col w-full gap-1 overflow-y-auto scrollbar-thumb-rounded-full scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800">
+        {#each shownRunners as [id, details]}
+          <InstanceButton
+            class="group"
+          >
+            <Icon icon="mdi:cube-outline" class="min-w-max" />
+            <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{details.name}</p>
+            <div class="flex-grow" />
+            <div class="relative flex flex-row items-center justify-center">
+              {#if details.connected}
+                <div class="w-1 min-w-max h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-green-400 dark:bg-green-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
+              {:else}
+                <div class="w-1 min-w-max h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-zinc-400 dark:bg-zinc-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
+              {/if}
+              <Icon icon="mdi:arrow-right" class="absolute w-4 min-w-max h-4 opacity-0 -translate-x-2 group-hover:translate-x-0 transition-all duration-100 group-hover:opacity-100 group-hover:transition-all group-hover:duration-100" />
+            </div>
+          </InstanceButton>
+        {/each}
+      </div>
+    </div>
     <InstanceButton
       onClick={addRunner}
     >
