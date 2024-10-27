@@ -44,7 +44,7 @@
   }
 
   function updateShownRunners(runners: Map<string, Runner>) {
-    shownRunners = Object.entries(runners);
+    shownRunners = Object.entries(runners).sort((a: [string, Runner], b: [string, Runner]) => a[1].name.localeCompare(b[1].name));
   }
 </script>
 
