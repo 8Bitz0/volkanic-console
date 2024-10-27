@@ -28,7 +28,7 @@
       additionalTextClasses = additionalTextClasses + "text-[13px] font-extrabold";
 
       state.titleBarEnabled = true;
-    } else if (os === "windows") {
+    } else if (os === "windows" || os === "linux") {
       enabled = true;
       buttonStyle = "windows"
       height = 32;
