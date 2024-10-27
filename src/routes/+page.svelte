@@ -47,6 +47,10 @@
   runnerListener((runners) => {
     updateRunners(runners);
   });
+
+  addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+});
 </script>
 
 <div class="absolute flex flex-col w-full h-full bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50">
