@@ -10,6 +10,7 @@ pub use http::is_valid_url;
 use http::new_client;
 
 const HEARTBEAT_INTERVAL_MS: u32 = 4000;
+const HEARTBEAT_INTERVAL_OFFLINE_MS: u32 = 12000;
 const SUPPORTED_PROTOCOL: u64 = 1;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -167,7 +168,13 @@ impl Runner {
 
                 let _ = runner.update.send(());
     
-                time::sleep(time::Duration::from_millis(HEARTBEAT_INTERVAL_MS as u64)).await;
+                time::sleep(time::Duration::from_millis(
+                    if connected {
+                        HEARTBEAT_INTERVAL_MS as u64
+                    } else {
+                        HEARTBEAT_INTERVAL_OFFLINE_MS as u64
+                    }
+                )).await;
             }
         });
     }
