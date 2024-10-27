@@ -1,8 +1,8 @@
 import { invoke } from "@tauri-apps/api/core";
 
 export interface Runner {
-  name: String;
-  url: String;
+  name: string;
+  url: string;
   connected: boolean;
 }
 
