@@ -76,7 +76,7 @@ async fn m_runner_new(app: Arc<AppHandle>, name: String, url: String) -> Result<
 
     let details = RunnerConDetails {
         name: name.clone(),
-        url,
+        url: url.trim_end_matches('/').to_string(),
     };
 
     let runner = Runner::new(details).await.map_err(|e| e.to_string())?;
