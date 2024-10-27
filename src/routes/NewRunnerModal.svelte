@@ -15,6 +15,9 @@
 
   let processing: boolean = false;
 
+  let input1: HTMLInputElement;
+  let input2: HTMLInputElement;
+
   $: checkDetails(nameValue, addressValue).then((v) => canConnect = v);
 
   function closeModal() {
@@ -55,11 +58,32 @@
       <h1 class="text-xl">Add Runner</h1>
       <div>
         <p class="text-sm">Name:</p>
-        <input placeholder="My Runner" bind:value={nameValue} class="w-full h-8 border-[1px] border-zinc-200 dark:border-zinc-700 rounded-lg p-2 bg-zinc-50 dark:bg-zinc-800" />
+        <input
+          bind:this={input1}
+          placeholder="My Runner"
+          bind:value={nameValue}
+          class="w-full h-8 border-[1px] border-zinc-200 dark:border-zinc-700 rounded-lg p-2 bg-zinc-50 dark:bg-zinc-800"
+          on:keydown={(k) => {
+            if (k.key === "Enter") {
+              input2.select();
+            }
+          }}
+        />
       </div>
       <div>
         <p class="text-sm">Address:</p>
-        <input placeholder="https://example.com:56088" bind:value={addressValue} type="url" class="w-full h-8 border-[1px] border-zinc-200 dark:border-zinc-700 rounded-lg p-2 bg-zinc-50 dark:bg-zinc-800" />
+        <input
+          bind:this={input2}
+          placeholder="https://example.com:56088"
+          bind:value={addressValue}
+          type="url"
+          class="w-full h-8 border-[1px] border-zinc-200 dark:border-zinc-700 rounded-lg p-2 bg-zinc-50 dark:bg-zinc-800"
+          on:keydown={(k) => {
+            if (k.key === "Enter" && canConnect && !processing) {
+              connectRunner();
+            }
+          }}
+        />
       </div>
     </div>
     <div class="flex flex-row gap-4 px-5 pb-5">
@@ -79,13 +103,13 @@
       {:else}
         {#if !processing}
           <button
-            class="flex flex-row w-full h-12 justify-center items-center rounded-lg text-zinc-400 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 cursor-default"
+            class="flex flex-row w-full h-12 justify-center items-center rounded-lg text-zinc-400 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-700 opacity-40 cursor-default"
           >
             Connect
           </button>
         {:else}
           <button
-            class="flex flex-row w-full h-12 justify-center items-center rounded-lg text-zinc-400 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 cursor-default"
+            class="flex flex-row w-full h-12 justify-center items-center rounded-lg text-zinc-400 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-700 opacity-40 cursor-default"
           >
             <Icon icon="svg-spinners:3-dots-fade" class="w-6 h-6" />
           </button>
