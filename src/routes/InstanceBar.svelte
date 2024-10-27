@@ -44,7 +44,14 @@
   }
 
   function updateShownRunners(runners: Map<string, Runner>) {
-    shownRunners = Object.entries(runners).sort((a: [string, Runner], b: [string, Runner]) => a[1].name.localeCompare(b[1].name));
+    shownRunners = Object.entries(runners).sort((a: [string, Runner], b: [string, Runner]) => {
+      // Sort by connected status
+      if (a[1].connected !== b[1].connected) {
+        return b[1].connected ? 1 : -1; // True values first
+      }
+      // If connected status is the same, sort alphabetically by name
+      return a[1].name.localeCompare(b[1].name);
+    });
   }
 </script>
 
