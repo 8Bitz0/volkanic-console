@@ -1,23 +1,22 @@
 name: "build"
 
-on: [pull_request, push]
+on: [pull_request, push, workflow_dispatch]
+
+env:
+  VERSION: "0.1.0"
 
 jobs:
-  test-tauri:
+  build-mac:
+    name: 'Build for macOS'
+    runs-on: ${{ matrix.job.on }}
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          - platform: "macos-latest" # for Arm based macs (M1 and above).
-            args: "--target aarch64-apple-darwin"
-          - platform: "macos-latest" # for Intel based macs.
-            args: "--target x86_64-apple-darwin"
-          - platform: "ubuntu-22.04" # for Tauri v1 you could replace this with ubuntu-20.04.
-            args: ""
-          - platform: "windows-latest"
-            args: ""
-
-    runs-on: ${{ matrix.platform }}
+        job:
+        - {
+            target: 'aarch64-apple-darwin'
+            on: 'macos-latest'
+            arch: 'aarch64'
+          }
     steps:
       - uses: actions/checkout@v4
 
@@ -29,8 +28,7 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+          targets: ${{ matrix.job.target }}
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
@@ -45,8 +43,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: ${{ matrix.args }}
+          args: '--target ${{ matrix.job.target }}'
 
-      - name: print artifact paths
-        run: |
-          echo '${{ steps.build.outputs.artifactPaths }}'
+      - name: determine artifact names
+        rune: |
+          echo "DMG_NAME=Volkanic Console_${{ env.VERSION }}_${{ matrix.job.arch }}.dmg" >> $GITHUB_ENV
+          echo "DMG_PATH=src-tauri/target/${{ matrix.job.target }}/release/bundle/dmg/Volkanic Console_${{ env.VERSION }}_${{ matrix.job.arch }}.dmg" >> $GITHUB_ENV
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.DMG_NAME }}
+          path: ${{ env.DMG_PATH }}
