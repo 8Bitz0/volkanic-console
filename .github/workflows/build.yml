@@ -46,7 +46,7 @@ jobs:
           args: '--target ${{ matrix.job.target }}'
 
       - name: determine artifact names
-        rune: |
+        run: |
           echo "DMG_NAME=Volkanic Console_${{ env.VERSION }}_${{ matrix.job.arch }}.dmg" >> $GITHUB_ENV
           echo "DMG_PATH=src-tauri/target/${{ matrix.job.target }}/release/bundle/dmg/Volkanic Console_${{ env.VERSION }}_${{ matrix.job.arch }}.dmg" >> $GITHUB_ENV
 
