@@ -12,11 +12,11 @@ jobs:
     strategy:
       matrix:
         job:
-        - {
-            target: 'aarch64-apple-darwin'
-            on: 'macos-latest'
-            arch: 'aarch64'
-          }
+          - {
+              target: 'aarch64-apple-darwin',
+              on: 'macos-latest',
+              arch: 'aarch64',
+            }
     steps:
       - uses: actions/checkout@v4
 
