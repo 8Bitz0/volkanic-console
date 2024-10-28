@@ -94,7 +94,7 @@ jobs:
           echo "APPIMAGE_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/appimage/*.AppImage)")" >> $GITHUB_ENV
           echo "APPIMAGE_PATH=$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/appimage/*.AppImage | tr -d \')" >> $GITHUB_ENV
           echo "DEB_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/deb/*.deb)")" >> $GITHUB_ENV
-          echo "DEB_PATH="$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/deb/*.deb | tr -d \')" >> $GITHUB_ENV
+          echo "DEB_PATH=$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/deb/*.deb | tr -d \')" >> $GITHUB_ENV
           echo "RPM_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/rpm/*.rpm)")" >> $GITHUB_ENV
           echo "RPM_PATH=$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/rpm/*.rpm | tr -d \')" >> $GITHUB_ENV
 
