@@ -45,7 +45,7 @@ jobs:
       - name: determine artifact names
         run: |
           echo "DMG_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/dmg/*.dmg)")" >> $GITHUB_ENV
-          echo "DMG_PATH=$(ls src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg | tr -d \')" >> $GITHUB_ENV
+          echo "DMG_PATH=$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/dmg/*.dmg | tr -d \')" >> $GITHUB_ENV
 
       - uses: actions/upload-artifact@v4
         with:
@@ -64,6 +64,11 @@ jobs:
             }
     steps:
       - uses: actions/checkout@v4
+
+      - name: install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: setup node
         uses: actions/setup-node@v4
