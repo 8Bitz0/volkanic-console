@@ -15,12 +15,10 @@ jobs:
           - {
               target: 'aarch64-apple-darwin',
               on: 'macos-latest',
-              arch: 'aarch64',
             }
           - {
               target: 'x86_64-apple-darwin',
               on: 'macos-latest',
-              arch: 'x64',
             }
     steps:
       - uses: actions/checkout@v4
@@ -46,10 +44,66 @@ jobs:
 
       - name: determine artifact names
         run: |
-          echo "DMG_NAME=Volkanic Console_${{ env.VERSION }}_${{ matrix.job.arch }}.dmg" >> $GITHUB_ENV
-          echo "DMG_PATH=src-tauri/target/${{ matrix.job.target }}/release/bundle/dmg/Volkanic Console_${{ env.VERSION }}_${{ matrix.job.arch }}.dmg" >> $GITHUB_ENV
+          echo "DMG_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/dmg/*.dmg)")" >> $GITHUB_ENV
+          echo "DMG_PATH=$(ls src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg | tr -d \')" >> $GITHUB_ENV
 
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.DMG_NAME }}
           path: ${{ env.DMG_PATH }}
+  
+  build-linux:
+    name: 'Build for Linux'
+    runs-on: ${{ matrix.job.on }}
+    strategy:
+      matrix:
+        job:
+          - {
+              target: 'x86_64-unknown-linux-gnu',
+              on: 'ubuntu-22.04',
+            }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.job.target }}
+
+      - name: install frontend dependencies
+        run: npm install
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: '--target ${{ matrix.job.target }}'
+
+      - name: determine artifact names
+        run: |
+          echo "APPIMAGE_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/appimage/*.AppImage)")" >> $GITHUB_ENV
+          echo "APPIMAGE_PATH=$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/appimage/*.AppImage | tr -d \')" >> $GITHUB_ENV
+          echo "DEB_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/deb/*.deb)")" >> $GITHUB_ENV
+          echo "DEB_PATH="$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/deb/*.deb | tr -d \')" >> $GITHUB_ENV
+          echo "RPM_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/rpm/*.rpm)")" >> $GITHUB_ENV
+          echo "RPM_PATH=$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/rpm/*.rpm | tr -d \')" >> $GITHUB_ENV
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APPIMAGE_NAME }}
+          path: ${{ env.APPIMAGE_PATH }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.DEB_NAME }}
+          path: ${{ env.DEB_PATH }}
+          
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.RPM_NAME }}
+          path: ${{ env.RPM_PATH }}
