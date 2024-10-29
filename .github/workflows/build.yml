@@ -1,0 +1,164 @@
+name: "build"
+
+on: [pull_request, push, workflow_dispatch]
+
+env:
+  VERSION: "0.1.0"
+
+jobs:
+  build-mac:
+    name: 'Build for macOS'
+    runs-on: ${{ matrix.job.on }}
+    strategy:
+      matrix:
+        job:
+          - {
+              target: 'aarch64-apple-darwin',
+              on: 'macos-latest',
+            }
+          - {
+              target: 'x86_64-apple-darwin',
+              on: 'macos-latest',
+            }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.job.target }}
+
+      - name: install frontend dependencies
+        run: npm install
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: '--target ${{ matrix.job.target }}'
+
+      - name: determine artifact names
+        run: |
+          echo "DMG_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/dmg/*.dmg)")" >> $GITHUB_ENV
+          echo "DMG_PATH=$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/dmg/*.dmg | tr -d \')" >> $GITHUB_ENV
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.DMG_NAME }}
+          path: ${{ env.DMG_PATH }}
+  
+  build-linux:
+    name: 'Build for Linux'
+    runs-on: ${{ matrix.job.on }}
+    strategy:
+      matrix:
+        job:
+          - {
+              target: 'x86_64-unknown-linux-gnu',
+              on: 'ubuntu-22.04',
+            }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.job.target }}
+
+      - name: install frontend dependencies
+        run: npm install
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: '--target ${{ matrix.job.target }}'
+
+      - name: determine artifact names
+        run: |
+          echo "APPIMAGE_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/appimage/*.AppImage)")" >> $GITHUB_ENV
+          echo "APPIMAGE_PATH=$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/appimage/*.AppImage | tr -d \')" >> $GITHUB_ENV
+          echo "DEB_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/deb/*.deb)")" >> $GITHUB_ENV
+          echo "DEB_PATH=$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/deb/*.deb | tr -d \')" >> $GITHUB_ENV
+          echo "RPM_NAME=$(basename "$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/rpm/*.rpm)")" >> $GITHUB_ENV
+          echo "RPM_PATH=$(ls src-tauri/target/${{ matrix.job.target }}/release/bundle/rpm/*.rpm | tr -d \')" >> $GITHUB_ENV
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APPIMAGE_NAME }}
+          path: ${{ env.APPIMAGE_PATH }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.DEB_NAME }}
+          path: ${{ env.DEB_PATH }}
+          
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.RPM_NAME }}
+          path: ${{ env.RPM_PATH }}
+
+  build-windows:
+    name: 'Build for Windows'
+    runs-on: ${{ matrix.job.on }}
+    strategy:
+      matrix:
+        job:
+          - {
+              target: 'aarch64-pc-windows-msvc',
+              on: 'windows-2022',
+            }
+          - {
+              target: 'i686-pc-windows-msvc',
+              on: 'windows-2022',
+            }
+          - {
+              target: 'x86_64-pc-windows-msvc',
+              on: 'windows-2022',
+            }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.job.target }}
+
+      - name: install frontend dependencies
+        run: npm install
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: '--target ${{ matrix.job.target }}'
+
+      - name: determine artifact names
+        run: |
+          "MSI_NAME=$((Get-ChildItem "src-tauri\target\${{ matrix.job.target }}\release\bundle\msi\").Name)" | Out-File -Append -Encoding utf8 $env:GITHUB_ENV
+          "MSI_PATH=$((Get-ChildItem "src-tauri\target\${{ matrix.job.target }}\release\bundle\msi\").FullName)" | Out-File -Append -Encoding utf8 $env:GITHUB_ENV
+          
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.MSI_NAME }}
+          path: ${{ env.MSI_PATH }}
