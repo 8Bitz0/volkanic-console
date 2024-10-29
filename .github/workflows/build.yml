@@ -112,3 +112,53 @@ jobs:
         with:
           name: ${{ env.RPM_NAME }}
           path: ${{ env.RPM_PATH }}
+
+  build-windows:
+    name: 'Build for Windows'
+    runs-on: ${{ matrix.job.on }}
+    strategy:
+      matrix:
+        job:
+          - {
+              target: 'aarch64-pc-windows-msvc',
+              on: 'windows-2022',
+            }
+          - {
+              target: 'i686-pc-windows-msvc',
+              on: 'windows-2022',
+            }
+          - {
+              target: 'x86_64-pc-windows-msvc',
+              on: 'windows-2022',
+            }
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.job.target }}
+
+      - name: install frontend dependencies
+        run: npm install
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: '--target ${{ matrix.job.target }}'
+
+      - name: determine artifact names
+        run: |
+          "MSI_NAME=$((Get-ChildItem "src-tauri\target\${{ matrix.job.target }}\release\bundle\msi\").Name)" | Out-File -Append -Encoding utf8 $env:GITHUB_ENV
+          "MSI_PATH=$((Get-ChildItem "src-tauri\target\${{ matrix.job.target }}\release\bundle\msi\").FullName)" | Out-File -Append -Encoding utf8 $env:GITHUB_ENV
+          
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.MSI_NAME }}
+          path: ${{ env.MSI_PATH }}
