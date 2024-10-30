@@ -3,9 +3,7 @@ import type { Runner } from "./Runner";
 
 export interface AppState {
   runners: Map<string, Runner>;
-  instances: Instance[];
-  selectedRunner?: string;
-  selectedInstance?: string;
+  selectedInstance: [string, string] | null;
   settingsOpen: boolean;
   newInstanceModal: boolean;
   newRunnerModal: boolean;

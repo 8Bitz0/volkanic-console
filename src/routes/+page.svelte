@@ -16,20 +16,7 @@
 
   let state: AppState = {
     runners: new Map(),
-    instances: [
-      {
-        id: "1234",
-        name: "Minecraft 1.19.2",
-        type: {
-          volkanic: {
-            source: {
-              url: ["https://example.com"]
-            }
-          }
-        }
-      }
-    ],
-    selectedInstance: "",
+    selectedInstance: null,
     settingsOpen: false,
     newInstanceModal: false,
     newRunnerModal: false,
