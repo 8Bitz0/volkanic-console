@@ -4,6 +4,7 @@ use serde_json::Value;
 use std::{collections::HashMap, sync::Arc};
 use tokio::{sync::{broadcast, Mutex}, time};
 
+pub mod event;
 pub mod instance;
 mod http;
 
@@ -170,6 +171,9 @@ impl Runner {
 
         Ok(())
     }
+    pub fn send_update(&self) {
+        let _ = self.update.send(());
+    }
     async fn heartbeat(&self) -> bool {
         let client = match new_client() {
             Ok(o) => o,
@@ -190,13 +194,15 @@ impl Runner {
     async fn start_bg(runner: Arc<Self>) {
         let runner = runner.clone();
 
+        event::event_listen(runner.clone()).await;
+
         tokio::spawn(async move {
             loop {
                 let connected = runner.heartbeat().await;
 
                 *runner.connected.lock().await = connected;
 
-                let _ = runner.update.send(());
+                runner.send_update();
     
                 time::sleep(time::Duration::from_millis(
                     if connected {

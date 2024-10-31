@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { listen } from "@tauri-apps/api/event";
-
   import "../app.css";
 
   import InstanceBar from "./InstanceBar.svelte";
@@ -36,8 +34,8 @@
   });
 
   addEventListener('contextmenu', (e) => {
-  e.preventDefault();
-});
+    e.preventDefault();
+  });
 </script>
 
 <div class="absolute flex flex-col w-full h-full bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50">

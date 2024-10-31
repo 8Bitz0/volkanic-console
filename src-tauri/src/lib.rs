@@ -1,15 +1,18 @@
-use config::ConfigFile;
 use std::{collections::HashMap, sync::Arc};
 use tauri::Manager;
-use tokio::sync::Mutex;
+use tokio::sync::{broadcast, Mutex};
 
 mod cmd;
 mod config;
 mod runner;
 
+use config::ConfigFile;
+use runner::event::RemoteEvent;
+
 pub struct AppState {
     config: config::ConfigFile,
     runners: Arc<Mutex<HashMap<String, Arc<runner::Runner>>>>,
+    event_listener: broadcast::Sender<RemoteEvent>,
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -25,6 +28,7 @@ pub async fn run() {
     let state = AppState {
         config,
         runners: Arc::new(Mutex::new(HashMap::new())),
+        event_listener: broadcast::channel(4096).0,
     };
 
     let r = tauri::Builder::default()

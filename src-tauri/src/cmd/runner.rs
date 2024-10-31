@@ -74,6 +74,12 @@ pub async fn runner_new(app: AppHandle, name: String, url: String) -> Result<(),
     }
 }
 
+pub async fn send_runners(app: Arc<AppHandle>) -> Result<(), String> {
+    let state = app.state::<AppState>();
+
+    app.emit("runner", to_ui_runners(state.runners.clone()).await).map_err(|e| e.to_string())
+}
+
 async fn m_runner_new(app: Arc<AppHandle>, name: String, url: String) -> Result<(), String> {
     let state = app.state::<AppState>();
 
@@ -102,12 +108,6 @@ async fn m_runner_new(app: Arc<AppHandle>, name: String, url: String) -> Result<
     });
 
     Ok(())
-}
-
-async fn send_runners(app: Arc<AppHandle>) -> Result<(), String> {
-    let state = app.state::<AppState>();
-
-    app.emit("runner", to_ui_runners(state.runners.clone()).await).map_err(|e| e.to_string())
 }
 
 async fn to_ui_runners(runners: Arc<Mutex<HashMap<String, Arc<Runner>>>>) -> HashMap<String, UiRunner> {
