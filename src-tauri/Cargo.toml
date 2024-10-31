@@ -20,14 +20,26 @@ tauri-build = { version = "2.0.2", features = [] }
 [dependencies]
 tauri = { version = "2.0.6", features = [] }
 tauri-plugin-shell = "2.0.2"
-serde = { version = "1.0.213", features = ["derive"] }
+serde = { version = "1.0.214", features = ["derive"] }
 serde_json = "1.0.132"
 thiserror = "1.0.65"
-reqwest = "0.12.8"
+reqwest = "0.12.9"
 tokio = { version = "1.41.0", features = ["fs", "macros", "rt", "sync", "time"] }
 serde_jsonc = "1.0.108"
 dirs = "5.0.1"
 uuid = { version = "1.11.0", features = ["v4"] }
 tauri-plugin-dialog = "2"
 url = "2.5.2"
+futures-util = "0.3.31"
 
+[profile.dev]
+lto = "off"
+opt-level = 0
+incremental = true
+debug = 0
+
+[profile.release]
+lto = "thin"
+opt-level = 3
+incremental = false
+debug = 0

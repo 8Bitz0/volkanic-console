@@ -9,6 +9,8 @@ use tauri_plugin_dialog::DialogExt;
 use tokio::sync::Mutex;
 use uuid::Uuid;
 
+use super::instance::UiInstance;
+
 use crate::{
     runner::{Runner, RunnerConDetails, RunnerMode},
     AppState,
@@ -19,6 +21,7 @@ pub struct UiRunner {
     pub name: String,
     pub url: String,
     pub connected: bool,
+    pub instances: HashMap<String, UiInstance>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -71,6 +74,12 @@ pub async fn runner_new(app: AppHandle, name: String, url: String) -> Result<(),
     }
 }
 
+pub async fn send_runners(app: Arc<AppHandle>) -> Result<(), String> {
+    let state = app.state::<AppState>();
+
+    app.emit("runner", to_ui_runners(state.runners.clone()).await).map_err(|e| e.to_string())
+}
+
 async fn m_runner_new(app: Arc<AppHandle>, name: String, url: String) -> Result<(), String> {
     let state = app.state::<AppState>();
 
@@ -101,20 +110,21 @@ async fn m_runner_new(app: Arc<AppHandle>, name: String, url: String) -> Result<
     Ok(())
 }
 
-async fn send_runners(app: Arc<AppHandle>) -> Result<(), String> {
-    let state = app.state::<AppState>();
-
-    app.emit("runner", to_ui_runners(state.runners.clone()).await).map_err(|e| e.to_string())
-}
-
 async fn to_ui_runners(runners: Arc<Mutex<HashMap<String, Arc<Runner>>>>) -> HashMap<String, UiRunner> {
     let mut ui_runners = HashMap::new();
 
     for r in runners.lock().await.iter() {
+        let mut instances = HashMap::new();
+
+        for i in r.1.get_instances().await {
+            instances.insert(i.0, i.1.into());
+        }
+
         let ui_r = UiRunner {
             name: r.1.get_name().await,
             url: r.1.get_url().await,
             connected: r.1.is_connected().await,
+            instances,
         };
 
         ui_runners.insert(r.0.to_string(), ui_r.clone());

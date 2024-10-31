@@ -1,9 +1,12 @@
 import { invoke } from "@tauri-apps/api/core";
 
+import type { Instance } from "./Instance";
+
 export interface Runner {
   name: string;
   url: string;
   connected: boolean;
+  instances: Map<string, Instance>
 }
 
 export async function newRunner(name: string, url: string) {

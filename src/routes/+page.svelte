@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { listen } from "@tauri-apps/api/event";
-
   import "../app.css";
 
   import InstanceBar from "./InstanceBar.svelte";
@@ -16,20 +14,7 @@
 
   let state: AppState = {
     runners: new Map(),
-    instances: [
-      {
-        id: "1234",
-        name: "Minecraft 1.19.2",
-        type: {
-          volkanic: {
-            source: {
-              url: ["https://example.com"]
-            }
-          }
-        }
-      }
-    ],
-    selectedInstance: "",
+    selectedInstance: null,
     settingsOpen: false,
     newInstanceModal: false,
     newRunnerModal: false,
@@ -49,8 +34,8 @@
   });
 
   addEventListener('contextmenu', (e) => {
-  e.preventDefault();
-});
+    e.preventDefault();
+  });
 </script>
 
 <div class="absolute flex flex-col w-full h-full bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50">

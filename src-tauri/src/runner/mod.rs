@@ -1,10 +1,14 @@
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 use tokio::{sync::{broadcast, Mutex}, time};
 
+pub mod event;
+pub mod instance;
 mod http;
+
+use instance::Instance;
 
 pub use http::is_valid_url;
 use http::new_client;
@@ -24,6 +28,7 @@ pub struct Runner {
     update: broadcast::Sender<()>,
     disconnect_tx: broadcast::Sender<String>,
     connected: Mutex<bool>,
+    instances: Mutex<HashMap<String, Instance>>,
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -31,7 +36,7 @@ pub enum Error {
     #[error("{0}")]
     GenericIo(std::io::Error),
     #[error("HTTP error: {0}")]
-    HttpError(reqwest::Error),
+    Http(reqwest::Error),
     #[error("Invalid URL: {0}")]
     InvalidUrl(String),
     #[error("Response decode error")]
@@ -62,16 +67,16 @@ pub enum RunnerMode {
 
 impl Runner {
     pub async fn info<U: std::fmt::Display>(url: U) -> Result<RunnerInfo, Error> {
-        let client = new_client().map_err(Error::HttpError)?;
+        let client = new_client().map_err(Error::Http)?;
 
         let info_raw = client
             .get(format!("{}/info", url))
             .send()
             .await
-            .map_err(Error::HttpError)?
+            .map_err(Error::Http)?
             .text()
             .await
-            .map_err(Error::HttpError)?;
+            .map_err(Error::Http)?;
         let info_value =
             serde_json::from_str::<Value>(&info_raw).map_err(|_| Error::ResponseDecode)?;
 
@@ -101,7 +106,7 @@ impl Runner {
         Ok(info)
     }
     pub async fn new(con_details: RunnerConDetails) -> Result<Arc<Self>, Error> {
-        let info = Self::info(&con_details.url).await?;
+        Self::info(&con_details.url).await?;
 
         let runner = Arc::new(Self {
             details: Mutex::new(con_details),
@@ -110,7 +115,10 @@ impl Runner {
             update: broadcast::channel(255).0,
             disconnect_tx: broadcast::channel(1).0,
             connected: Mutex::new(true),
+            instances: Mutex::new(HashMap::new()),
         });
+
+        runner.update_instances().await?;
 
         Self::start_bg(runner.clone()).await;
 
@@ -140,6 +148,32 @@ impl Runner {
     pub async fn is_connected(&self) -> bool {
         *self.connected.lock().await
     }
+    /// Returns the local instances. Does not pull the latest data
+    /// from the runner.
+    pub async fn get_instances(&self) -> HashMap<String, Instance> {
+        self.instances.lock().await.clone()
+    }
+    pub async fn update_instances(&self) -> Result<(), Error> {
+        let client = new_client().map_err(Error::Http)?;
+
+        let instances_raw = client
+            .get(format!("{}/instance/list", self.details.lock().await.url))
+            .send()
+            .await
+            .map_err(Error::Http)?
+            .text()
+            .await
+            .map_err(Error::Http)?;
+
+        let instances = serde_json::from_str(&instances_raw).map_err(|_| Error::ResponseDecode)?;
+
+        *self.instances.lock().await = instances;
+
+        Ok(())
+    }
+    pub fn send_update(&self) {
+        let _ = self.update.send(());
+    }
     async fn heartbeat(&self) -> bool {
         let client = match new_client() {
             Ok(o) => o,
@@ -160,13 +194,15 @@ impl Runner {
     async fn start_bg(runner: Arc<Self>) {
         let runner = runner.clone();
 
+        event::event_listen(runner.clone()).await;
+
         tokio::spawn(async move {
             loop {
                 let connected = runner.heartbeat().await;
 
                 *runner.connected.lock().await = connected;
 
-                let _ = runner.update.send(());
+                runner.send_update();
     
                 time::sleep(time::Duration::from_millis(
                     if connected {

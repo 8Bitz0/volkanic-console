@@ -21,26 +21,33 @@
     state.newRunnerModal = true;
   }
 
-  let selectedInstance: Instance | null = null;
-  let shownInstances: Instance[] = [];
+  // [runner ID, instance ID, instance]
+  let selectedInstance: [string, string, Instance] | null = null;
+  let shownInstances: [string, string, Instance][] = [];
+  // [runner ID, runner]
   let shownRunners: [string, Runner][] = [];
 
-  $: updateShownInstances(state.selectedInstance, state.instances);
+  $: updateShownInstances(state.selectedInstance, state.runners);
   $: updateShownRunners(state.runners);
 
-  $: console.log(state.runners);
-
-  function updateShownInstances(selectedId: string | undefined, instances: Instance[]) {
+  function updateShownInstances(selectedId: [string, string] | null, runners: Map<string, Runner>) {
     shownInstances = [];
 
-    for (let instance of instances) {
-      if (selectedId === instance.id) {
-        selectedInstance = instance;
-      } else {
-        shownInstances.push(instance);
-        shownInstances = shownInstances;
+    for (let runner of Object.entries(runners) as [string, Runner][]) {
+      for (let instance of Object.entries(runner[1].instances) as [string, Instance][]) {
+        if (selectedId?.[0] === runner[0] && selectedId?.[1] === instance[0]) {
+          selectedInstance = [runner[0], instance[0], instance[1]];
+        } else {
+          shownInstances.push([runner[0], instance[0], instance[1]]);
+          shownInstances = shownInstances;
+        }
       }
     }
+
+    shownInstances = shownInstances.sort((a, b) => {
+      // Sort alphabetically
+      return a[2].name.localeCompare(b[2].name);
+    })
   }
 
   function updateShownRunners(runners: Map<string, Runner>) {
@@ -61,7 +68,7 @@
       {#if selectedInstance !== null}
         <InstanceButton active={false}>
           <Icon icon="mdi:cube-outline" class="min-w-max" />
-          <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{selectedInstance.name}</p>
+          <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{selectedInstance[2].name}</p>
           <div class="flex-grow" />
           <div class="relative flex flex-row items-center justify-center">
             <div class="w-1 min-w-max h-1 rounded-full bg-green-400 dark:bg-green-500" />
@@ -89,10 +96,10 @@
         {#each shownInstances as instance}
           <InstanceButton
             class="group"
-            onClick={() => state.selectedInstance = instance.id}
+            onClick={() => state.selectedInstance = [instance[0], instance[1]]}
           >
             <Icon icon="mdi:cube-outline" class="min-w-max" />
-            <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{instance.name}</p>
+            <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{instance[2].name}</p>
             <div class="flex-grow" />
             <div class="relative flex flex-row items-center justify-center">
               <div class="w-1 min-w-max h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-green-400 dark:bg-green-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
