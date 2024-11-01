@@ -63,22 +63,22 @@
   });
 </script>
 
-<div class="bg-zinc-100 dark:bg-zinc-900 overflow-hidden" style="height: {height}px;">
+<div class="relative z-50 bg-zinc-100 dark:bg-zinc-900 overflow-hidden" style="height: {height}px;">
   {#if enabled}
-    <div data-tauri-drag-region class="absolute flex flex-row w-full justify-end right-0 translate-x-5 overflow-hidden" style="height: {height - 2}px;">
+    <div data-tauri-drag-region class="absolute flex flex-row w-full h-full justify-end right-0 translate-x-5 overflow-hidden">
       <div data-tauri-drag-region class="w-64 h-full blur-[128px] bg-green-500" />
     </div>
     {#if buttonStyle == "windows"}
       <div class="absolute flex flex-row right-0" style="height: {height}px;">
         <button
-          class="flex flex-col w-12 z-40 items-center justify-center bg-black dark:bg-white bg-opacity-0 dark:bg-opacity-0 hover:bg-opacity-10 transition-all duration-75 cursor-default"
+          class="flex flex-col w-12 items-center justify-center bg-black dark:bg-white bg-opacity-0 dark:bg-opacity-0 hover:bg-opacity-10 transition-all duration-75 cursor-default"
           style="height: {height - 2}px;"
           on:click={minimizeWindow}
         >
           <Icon icon="fluent:minimize-12-regular" class="w-4" />
         </button>
         <button
-          class="flex flex-col w-12 z-40 items-center justify-center bg-black dark:bg-white bg-opacity-0 dark:bg-opacity-0 hover:bg-opacity-10 transition-all duration-75 cursor-default"
+          class="flex flex-col w-12 items-center justify-center bg-black dark:bg-white bg-opacity-0 dark:bg-opacity-0 hover:bg-opacity-10 transition-all duration-75 cursor-default"
           style="height: {height - 2}px;"
 
           on:click={maximizeWindow}
@@ -90,7 +90,7 @@
           {/if}
         </button>
         <button
-          class="flex flex-col w-12 z-40 group items-center justify-center hover:bg-red-500 transition-all duration-75 cursor-default"
+          class="flex flex-col w-12 group items-center justify-center hover:bg-red-500 transition-all duration-75 cursor-default"
           style="height: {height - 2}px;"
           on:click={closeWindow}
         >
