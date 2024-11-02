@@ -3,9 +3,9 @@
 
   import InstanceButton from './InstanceButton.svelte';
 
-  import type { AppState } from "../scripts/State";
-  import type { Instance } from '../scripts/Instance';
-  import type { Runner } from '../scripts/Runner';
+  import type { AppState } from "../scripts/state";
+  import type { Instance } from '../scripts/instance';
+  import type { Runner } from '../scripts/runner';
 
   export let state: AppState;
 

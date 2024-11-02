@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 
-import type { Instance } from "./Instance";
+import type { Instance } from "./instance";
 
 export interface Runner {
   name: string;

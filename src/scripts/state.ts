@@ -1,5 +1,4 @@
-import type { Instance } from "./Instance";
-import type { Runner } from "./Runner";
+import type { Runner } from "./runner";
 
 export interface AppState {
   runners: Map<string, Runner>;

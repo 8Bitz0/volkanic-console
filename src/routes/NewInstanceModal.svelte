@@ -3,7 +3,7 @@
   import { sineInOut } from "svelte/easing";
   import { blur, scale } from "svelte/transition";
 
-  import type { AppState } from "../scripts/State";
+  import type { AppState } from "../scripts/state";
 
   export let state: AppState;
 

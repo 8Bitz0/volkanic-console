@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { AppState } from "../scripts/State";
+  import type { AppState } from "../scripts/state";
 
   export let state: AppState;
 

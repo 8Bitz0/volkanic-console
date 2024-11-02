@@ -3,8 +3,8 @@
   import { sineInOut } from "svelte/easing";
   import { blur, scale } from "svelte/transition";
 
-  import { isValidUrl, newRunner } from "../scripts/Runner";
-  import type { AppState } from "../scripts/State";
+  import { isValidUrl, newRunner } from "../scripts/runner";
+  import type { AppState } from "../scripts/state";
 
   export let state: AppState;
 

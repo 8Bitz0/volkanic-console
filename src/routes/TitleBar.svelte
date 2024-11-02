@@ -3,7 +3,7 @@
   import { getCurrentWindow } from '@tauri-apps/api/window';
   import { invoke } from "@tauri-apps/api/core";
 
-  import type { AppState } from "../scripts/State";
+  import type { AppState } from "../scripts/state";
 
   export let state: AppState;
 

@@ -8,9 +8,9 @@
   import SettingsPage from "./SettingsPage.svelte";
   import TitleBar from "./TitleBar.svelte";
 
-  import type { AppState } from "../scripts/State";
-  import { runnerListener } from "../scripts/Event";
-  import { listRunners, type Runner } from "../scripts/Runner";
+  import type { AppState } from "../scripts/state";
+  import { runnerListener } from "../scripts/event";
+  import { listRunners, type Runner } from "../scripts/runner";
 
   let state: AppState = {
     runners: new Map(),
