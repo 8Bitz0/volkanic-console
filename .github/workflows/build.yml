@@ -30,8 +30,6 @@ jobs:
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.job.target }}
 
       - name: install frontend dependencies
         run: npm install
