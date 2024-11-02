@@ -62,16 +62,16 @@
   }
 </script>
 
-<div class="flex flex-col w-72 bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
-  <div class="flex flex-col w-full max-h-[90%] gap-2 p-3">
-    <div class="flex flex-col w-full gap-1 overflow-y-hidden border-[1px] rounded-lg border-zinc-300 dark:border-zinc-700">
+<div class="w-52 min-w-52 bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
+  <div class="w-full p-3 h-[95%] overflow-y-auto space-y-2 scrollbar-thumb-rounded-full scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800">
+    <div class="w-full overflow-y-hidden border-[1px] rounded-lg border-zinc-300 dark:border-zinc-700">
       {#if selectedInstance !== null}
         <InstanceButton active={false}>
-          <Icon icon="mdi:cube-outline" class="min-w-max" />
+          <Icon icon="mdi:cube-outline" />
           <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{selectedInstance[2].name}</p>
           <div class="flex-grow" />
           <div class="relative flex flex-row items-center justify-center">
-            <div class="w-1 min-w-max h-1 rounded-full bg-green-400 dark:bg-green-500" />
+            <div class="w-1 h-1 rounded-full bg-green-400 dark:bg-green-500" />
           </div>
         </InstanceButton>
         <div class="flex flex-row h-8 gap-[1px] pt-[1px] i bg-zinc-300 dark:bg-zinc-700">
@@ -92,18 +92,18 @@
       {#if shownInstances.length > 0}
         <p class="text-zinc-400 dark:text-zinc-600 text-[11px]">INSTANCES</p>
       {/if}
-      <div class="flex flex-col w-full gap-1 overflow-y-auto scrollbar-thumb-rounded-full scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800">
+      <div class="flex flex-col w-full gap-1">
         {#each shownInstances as instance}
           <InstanceButton
             class="group"
             onClick={() => state.selectedInstance = [instance[0], instance[1]]}
           >
-            <Icon icon="mdi:cube-outline" class="min-w-max" />
+            <Icon icon="mdi:cube-outline" />
             <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{instance[2].name}</p>
             <div class="flex-grow" />
             <div class="relative flex flex-row items-center justify-center">
-              <div class="w-1 min-w-max h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-green-400 dark:bg-green-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
-              <Icon icon="mdi:arrow-right" class="absolute w-4 min-w-max h-4 opacity-0 -translate-x-2 group-hover:translate-x-0 transition-all duration-100 group-hover:opacity-100 group-hover:transition-all group-hover:duration-100" />
+              <div class="w-1 h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-green-400 dark:bg-green-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
+              <Icon icon="mdi:arrow-right" class="absolute w-4 h-4 opacity-0 -translate-x-2 group-hover:translate-x-0 transition-all duration-100 group-hover:opacity-100 group-hover:transition-all group-hover:duration-100" />
             </div>
           </InstanceButton>
         {/each}
@@ -112,7 +112,7 @@
     <InstanceButton
       onClick={addInstance}
     >
-      <Icon icon="mdi:plus" class="min-w-max" />
+      <Icon icon="mdi:plus" />
         <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">New Instance</p>
         <div class="flex-grow" />
     </InstanceButton>
@@ -123,16 +123,16 @@
           <InstanceButton
             class="group"
           >
-            <Icon icon="mdi:cube-outline" class="min-w-max" />
+            <Icon icon="mdi:cube-outline" />
             <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{details.name}</p>
             <div class="flex-grow" />
             <div class="relative flex flex-row items-center justify-center">
               {#if details.connected}
-                <div class="w-1 min-w-max h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-green-400 dark:bg-green-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
+                <div class="w-1 h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-green-400 dark:bg-green-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
               {:else}
-                <div class="w-1 min-w-max h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-zinc-400 dark:bg-zinc-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
+                <div class="w-1 h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-zinc-400 dark:bg-zinc-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
               {/if}
-              <Icon icon="mdi:arrow-right" class="absolute w-4 min-w-max h-4 opacity-0 -translate-x-2 group-hover:translate-x-0 transition-all duration-100 group-hover:opacity-100 group-hover:transition-all group-hover:duration-100" />
+              <Icon icon="mdi:arrow-right" class="absolute w-4 h-4 opacity-0 -translate-x-2 group-hover:translate-x-0 transition-all duration-100 group-hover:opacity-100 group-hover:transition-all group-hover:duration-100" />
             </div>
           </InstanceButton>
         {/each}
@@ -141,7 +141,7 @@
     <InstanceButton
       onClick={addRunner}
     >
-      <Icon icon="mdi:plus" class="min-w-max text-zinc-500" />
+      <Icon icon="mdi:plus" class=" text-zinc-500" />
       <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis text-zinc-500">New Runner</p>
       <div class="flex-grow" />
     </InstanceButton>

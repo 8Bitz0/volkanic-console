@@ -38,7 +38,7 @@
   });
 </script>
 
-<div class="absolute flex flex-col w-full h-full bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50">
+<div class="absolute w-full h-full bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50">
   <TitleBar bind:state />
   <div class="flex flex-row w-full h-full flex-grow">
     {#if state.settingsOpen}
@@ -53,9 +53,13 @@
     {/if}
   </div>
   {#if state.newInstanceModal}
-    <NewInstanceModal bind:state />
+    <div class="fixed inset-0 z-40">
+      <NewInstanceModal bind:state />
+    </div>
   {/if}
   {#if state.newRunnerModal}
-    <NewRunnerModal bind:state />
+    <div class="fixed inset-0 z-40">
+      <NewRunnerModal bind:state />
+    </div>
   {/if}
 </div>
