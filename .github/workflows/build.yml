@@ -1,6 +1,10 @@
 name: "build"
 
-on: [pull_request, push, workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 env:
   VERSION: "0.1.0"
@@ -13,11 +17,7 @@ jobs:
       matrix:
         job:
           - {
-              target: 'aarch64-apple-darwin',
-              on: 'macos-latest',
-            }
-          - {
-              target: 'x86_64-apple-darwin',
+              target: 'universal-apple-darwin',
               on: 'macos-latest',
             }
     steps:
@@ -31,7 +31,7 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.job.target }}
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
 
       - name: install frontend dependencies
         run: npm install
