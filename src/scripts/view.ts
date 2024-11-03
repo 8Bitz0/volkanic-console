@@ -1,3 +1,3 @@
 export type View =
   | { type: "home" }
-  | { type: "instance", runner: string, instance: string };
+  | { type: "instance-overview", runner: string, instance: string };

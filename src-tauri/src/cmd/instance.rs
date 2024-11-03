@@ -1,6 +1,15 @@
 use serde::{Deserialize, Serialize};
+use tauri::{AppHandle, Manager};
+use tauri_plugin_dialog::DialogExt;
 
-use crate::runner::instance::{Instance, InstanceType, VolkanicSource};
+use crate::{
+    AppState,
+    runner::instance::{
+        Instance,
+        InstanceType,
+        VolkanicSource,
+    },
+};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct UiInstance {
@@ -51,4 +60,35 @@ impl From<VolkanicSource> for UiVolkanicSource {
             }
         }
     }
+}
+
+#[tauri::command]
+pub async fn del_instance(app: AppHandle, runner: String, instance: String) -> Result<(), String> {
+    let state = app.state::<AppState>();
+
+    match state.runners.lock().await.get(&runner) {
+        Some(runner) => {
+            match runner.del_instance(instance).await {
+                Ok(_) => {},
+                Err(e) => {
+                    app.dialog()
+                        .message(e.to_string())
+                        .title("Instance Error")
+                        .show(|_| {});
+
+                    return Err(e.to_string());
+                }
+            };
+        }
+        None => {
+            app.dialog()
+                .message("Runner not found")
+                .title("Runner Error")
+                .show(|_| {});
+
+            return Err("Runner not found".to_string());
+        }
+    };
+
+    Ok(())
 }

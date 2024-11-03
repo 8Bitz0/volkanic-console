@@ -171,6 +171,17 @@ impl Runner {
 
         Ok(())
     }
+    pub async fn del_instance(&self, id: String) -> Result<(), Error> {
+        let client = new_client().map_err(Error::Http)?;
+
+        client
+            .post(format!("{}/instance/{}/delete", self.details.lock().await.url, id))
+            .send()
+            .await
+            .map_err(Error::Http)?;
+
+        Ok(())
+    }
     pub fn send_update(&self) {
         let _ = self.update.send(());
     }

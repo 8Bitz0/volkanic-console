@@ -3,6 +3,7 @@
   import { invoke } from "@tauri-apps/api/core";
   import { open } from "@tauri-apps/plugin-shell";
 
+  import InstanceOverview from "./(instance)/InstanceOverview.svelte";
   import type { AppState } from "../scripts/state";
 
   export let state: AppState;
@@ -37,5 +38,7 @@
         </button>
       </div>
     </div>
+  {:else if state.view.type === "instance-overview"}
+    <InstanceOverview bind:state instanceRef={[state.view.runner, state.view.instance]} />
   {/if}
 </div>

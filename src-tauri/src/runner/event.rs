@@ -14,6 +14,8 @@ const RETRY_INTERVAL_MS: u64 = 1000;
 pub enum RemoteEvent {
     #[serde(rename = "modify-instance")]
     ModifyInstance { id: String, instance: Instance },
+    #[serde(rename = "delete-instance")]
+    DeleteInstance { id: String },
 }
 
 pub async fn event_listen(runner: Arc<Runner>) {
@@ -87,6 +89,11 @@ pub async fn event_listen(runner: Arc<Runner>) {
                 match event {
                     RemoteEvent::ModifyInstance { id, instance } => {
                         runner.instances.lock().await.insert(id, instance);
+
+                        runner.send_update();
+                    }
+                    RemoteEvent::DeleteInstance { id } => {
+                        runner.instances.lock().await.remove(&id);
 
                         runner.send_update();
                     }

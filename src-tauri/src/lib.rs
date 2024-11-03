@@ -42,6 +42,7 @@ pub async fn run() {
         .invoke_handler(tauri::generate_handler![
             app_version,
             host_platform,
+            cmd::instance::del_instance,
             cmd::misc::is_valid_url,
             cmd::runner::runner_info,
             cmd::runner::runner_list,

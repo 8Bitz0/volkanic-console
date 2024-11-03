@@ -21,20 +21,58 @@
     state.newRunnerModal = true;
   }
 
+  function openInstanceGeneral(instance: [string, string]) {
+    state.view = { type: "instance-overview", runner: instance[0], instance: instance[1] };
+  }
+
   // [runner ID, instance ID, instance]
   let selectedInstance: [string, string, Instance] | null = null;
   let shownInstances: [string, string, Instance][] = [];
   // [runner ID, runner]
   let shownRunners: [string, Runner][] = [];
 
-  $: updateShownInstances(state.selectedInstance, state.runners);
   $: updateShownRunners(state.runners);
+  $: updateShownInstances(state.selectedInstance, state.runners);
+  
+  /**
+   * Updates and sorts the array of displayed runners based on their connection status and names.
+   * 
+   * @param {Map<string, Runner>} runners - Map of runner IDs to Runner objects
+   *
+   * Sorting logic:
+   * 1. Connected runners are displayed before disconnected ones
+   * 2. Within each connection status group, runners are sorted alphabetically by name
+   *
+   * This function updates the `shownRunners` array with the sorted entries.
+   */
+  function updateShownRunners(runners: Map<string, Runner>) {
+    shownRunners = Array.from(runners.entries()).sort((a: [string, Runner], b: [string, Runner]) => {
+      // Sort by connected status
+      if (a[1].connected !== b[1].connected) {
+        return b[1].connected ? 1 : -1; // True values first
+      }
+      // If connected status is the same, sort alphabetically by name
+      return a[1].name.localeCompare(b[1].name);
+    });
+  }
 
+  
+  /**
+   * Updates the list of shown instances based on the selected instance and available runners.
+   * Separates the selected instance from the shown instances list and sorts them alphabetically.
+   * 
+   * @param {[string, string] | null} selectedId - Tuple of [runnerId, instanceId] for the selected instance, or null if none selected
+   * @param {Map<string, Runner>} runners - Map of runners containing instances
+   * 
+   * @updates {Array} shownInstances - Array of instance entries [runnerId, instanceId, Instance]
+   * @updates {Array|null} selectedInstance - Currently selected instance entry [runnerId, instanceId, Instance]
+   */
   function updateShownInstances(selectedId: [string, string] | null, runners: Map<string, Runner>) {
+    selectedInstance = null;
     shownInstances = [];
 
-    for (let runner of Object.entries(runners) as [string, Runner][]) {
-      for (let instance of Object.entries(runner[1].instances) as [string, Instance][]) {
+    for (let runner of Array.from(runners.entries()) as [string, Runner][]) {
+      for (let instance of Array.from(runner[1].instances.entries()) as [string, Instance][]) {
         if (selectedId?.[0] === runner[0] && selectedId?.[1] === instance[0]) {
           selectedInstance = [runner[0], instance[0], instance[1]];
         } else {
@@ -49,21 +87,11 @@
       return a[2].name.localeCompare(b[2].name);
     })
   }
-
-  function updateShownRunners(runners: Map<string, Runner>) {
-    shownRunners = Object.entries(runners).sort((a: [string, Runner], b: [string, Runner]) => {
-      // Sort by connected status
-      if (a[1].connected !== b[1].connected) {
-        return b[1].connected ? 1 : -1; // True values first
-      }
-      // If connected status is the same, sort alphabetically by name
-      return a[1].name.localeCompare(b[1].name);
-    });
-  }
 </script>
 
 <div class="flex flex-col w-52 min-w-52 bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
   <div class="w-full h-full p-3 overflow-y-auto space-y-2 scrollbar-thumb-rounded-full scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800">
+    <!--  -->
     <div class="w-full overflow-y-hidden border-[1px] rounded-lg border-zinc-300 dark:border-zinc-700">
       {#if selectedInstance !== null}
         <InstanceButton active={false}>
@@ -74,7 +102,20 @@
             <div class="w-1 h-1 rounded-full bg-green-400 dark:bg-green-500" />
           </div>
         </InstanceButton>
-        <div class="flex flex-row h-8 gap-[1px] pt-[1px] i bg-zinc-300 dark:bg-zinc-700">
+        <!-- Separator between instance label and buttons -->
+        <div class="w-full h-[1px] bg-zinc-300 dark:bg-zinc-700" />
+        <div class="w-full text-zinc-600 dark:text-zinc-400 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-all duration-100">
+          <button
+            on:click={() => {selectedInstance && openInstanceGeneral([selectedInstance[0], selectedInstance[1]])}}
+            class="flex flex-row w-full h-8 items-center gap-2 p-2 cursor-default"
+          >
+            <Icon icon="mdi:graph-line" class="w-5 h-5" />
+            <p class="text-sm">Overview</p>
+          </button>
+        </div>
+        <!-- Separator between instance category buttons and action buttons -->
+        <div class="w-full h-[1px] bg-zinc-300 dark:bg-zinc-700" />
+        <div class="flex flex-row h-8 gap-[1px] bg-zinc-300 dark:bg-zinc-700">
           <button class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 active:bg-zinc-300 dark:active:bg-zinc-700 transition-all cursor-default"><Icon icon="mdi:restart" /></button>
           <button class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 active:bg-zinc-300 dark:active:bg-zinc-700 transition-all cursor-default"><Icon icon="mdi:power" /></button>
         </div>
@@ -85,9 +126,8 @@
         </div>
       {/if}
     </div>
-    {#if shownInstances.length > 0}
-      <div class="h-2" />
-    {/if}
+    <!-- Separator between instance selection and instance/runner lists -->
+    <div class="h-1" />
     <div>
       {#if shownInstances.length > 0}
         <p class="text-zinc-400 dark:text-zinc-600 text-[11px]">INSTANCES</p>
@@ -96,7 +136,11 @@
         {#each shownInstances as instance}
           <InstanceButton
             class="group"
-            onClick={() => state.selectedInstance = [instance[0], instance[1]]}
+            onClick={() => {
+              state.selectedInstance = [instance[0], instance[1]]
+
+              openInstanceGeneral([instance[0], instance[1]])
+            }}
           >
             <Icon icon="mdi:cube-outline" />
             <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{instance[2].name}</p>
