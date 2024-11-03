@@ -40,6 +40,7 @@ pub async fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            app_version,
             host_platform,
             cmd::misc::is_valid_url,
             cmd::runner::runner_info,
@@ -59,6 +60,12 @@ pub async fn run() {
         }
     }
 }
+
+#[tauri::command]
+async fn app_version() -> String {
+    env!("CARGO_PKG_VERSION").to_string()
+}
+
 
 /// Returns the platform compiled for
 #[tauri::command]

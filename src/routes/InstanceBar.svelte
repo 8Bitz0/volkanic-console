@@ -62,8 +62,8 @@
   }
 </script>
 
-<div class="w-52 min-w-52 bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
-  <div class="w-full p-3 h-[95%] overflow-y-auto space-y-2 scrollbar-thumb-rounded-full scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800">
+<div class="flex flex-col w-52 min-w-52 bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
+  <div class="w-full h-full p-3 overflow-y-auto space-y-2 scrollbar-thumb-rounded-full scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800">
     <div class="w-full overflow-y-hidden border-[1px] rounded-lg border-zinc-300 dark:border-zinc-700">
       {#if selectedInstance !== null}
         <InstanceButton active={false}>
@@ -109,15 +109,10 @@
         {/each}
       </div>
     </div>
-    <InstanceButton
-      onClick={addInstance}
-    >
-      <Icon icon="mdi:plus" />
-        <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">New Instance</p>
-        <div class="flex-grow" />
-    </InstanceButton>
     <div>
-      <p class="text-zinc-400 dark:text-zinc-600 text-[11px]">RUNNERS</p>
+      {#if shownRunners.length > 0}
+        <p class="text-zinc-400 dark:text-zinc-600 text-[11px]">RUNNERS</p>
+      {/if}
       <div class="flex flex-col w-full gap-1 overflow-y-auto scrollbar-thumb-rounded-full scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800">
         {#each shownRunners as [id, details]}
           <InstanceButton
@@ -138,12 +133,21 @@
         {/each}
       </div>
     </div>
+  </div>
+  <div class="flex flex-col p-3 gap-2">
     <InstanceButton
       onClick={addRunner}
     >
       <Icon icon="mdi:plus" class=" text-zinc-500" />
       <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis text-zinc-500">New Runner</p>
       <div class="flex-grow" />
+    </InstanceButton>
+    <InstanceButton
+      onClick={addInstance}
+    >
+      <Icon icon="mdi:plus" />
+        <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">New Instance</p>
+        <div class="flex-grow" />
     </InstanceButton>
   </div>
 </div>

@@ -15,6 +15,7 @@
   let state: AppState = {
     runners: new Map(),
     selectedInstance: null,
+    view: { type: "home" },
     settingsOpen: false,
     newInstanceModal: false,
     newRunnerModal: false,
@@ -38,15 +39,15 @@
   });
 </script>
 
-<div class="absolute w-full h-full bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50">
+<div class="absolute w-full h-full bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50 flex flex-col">
   <TitleBar bind:state />
-  <div class="flex flex-row w-full h-full flex-grow">
+  <div class="flex-1">
     {#if state.settingsOpen}
-      <div class="w-full h-full">
+      <div class="h-full">
         <SettingsPage bind:state />
       </div>
     {:else}
-      <div class="flex flex-row w-full h-full">
+      <div class="flex flex-row h-full">
         <InstanceBar bind:state />
         <PageView bind:state />
       </div>
