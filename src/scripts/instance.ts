@@ -12,8 +12,13 @@ export type InstanceType = {
 }
 
 export type VolkanicSource =
-  | { url: [string] }
-  | { base64: [string] };
+  | { url: string }
+  | { base64: string };
+
+  export interface InstanceRequest {
+    name: string;
+    type: InstanceType;
+  }
 
 /**
  * Deletes a specified instance for a given runner.
@@ -23,4 +28,8 @@ export type VolkanicSource =
  */
 export async function delInstance(runner: string, instance: string) {
   await invoke("del_instance", { runner, instance });
+}
+
+export async function newInstance(runner: string, instance: InstanceRequest) {
+  await invoke("new_instance", { runner, instance });
 }

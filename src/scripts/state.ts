@@ -5,8 +5,8 @@ export interface AppState {
   runners: Map<string, Runner>;
   selectedInstance: [string, string] | null;
   view: View;
+  pageViewPath: { name: string, view: View | null }[];
   settingsOpen: boolean;
-  newInstanceModal: boolean;
   newRunnerModal: boolean;
   titleBarEnabled: boolean;
 }

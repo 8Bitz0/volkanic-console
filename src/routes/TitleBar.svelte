@@ -63,7 +63,7 @@
   });
 </script>
 
-<div class="relative z-50 bg-zinc-100 dark:bg-zinc-900 overflow-hidden" style="height: {height}px;">
+<div class="relative z-50 bg-zinc-100 dark:bg-zinc-900 overflow-hidden" style="height: {height}px; min-height: {height}px;">
   {#if enabled}
     <div data-tauri-drag-region class="absolute flex flex-row w-full h-full justify-end right-0 translate-x-5 overflow-hidden">
       <div data-tauri-drag-region class="w-64 h-full blur-[128px] bg-green-500" />

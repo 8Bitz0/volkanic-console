@@ -43,6 +43,7 @@ pub async fn run() {
             app_version,
             host_platform,
             cmd::instance::del_instance,
+            cmd::instance::new_instance,
             cmd::misc::is_valid_url,
             cmd::runner::runner_info,
             cmd::runner::runner_list,

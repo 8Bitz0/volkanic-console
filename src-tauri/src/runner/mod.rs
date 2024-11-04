@@ -8,7 +8,7 @@ pub mod event;
 pub mod instance;
 mod http;
 
-use instance::Instance;
+use instance::{Instance, InstanceRequest};
 
 pub use http::is_valid_url;
 use http::new_client;
@@ -176,6 +176,18 @@ impl Runner {
 
         client
             .post(format!("{}/instance/{}/delete", self.details.lock().await.url, id))
+            .send()
+            .await
+            .map_err(Error::Http)?;
+
+        Ok(())
+    }
+    pub async fn new_instance(&self, instance: InstanceRequest) -> Result<(), Error> {
+        let client = new_client().map_err(Error::Http)?;
+
+        client
+            .post(format!("{}/instance/new", self.details.lock().await.url))
+            .json(&instance)
             .send()
             .await
             .map_err(Error::Http)?;

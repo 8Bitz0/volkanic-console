@@ -2,7 +2,6 @@
   import "../app.css";
 
   import InstanceBar from "./InstanceBar.svelte";
-  import NewInstanceModal from "./NewInstanceModal.svelte";
   import NewRunnerModal from "./NewRunnerModal.svelte";
   import PageView from "./PageView.svelte";
   import SettingsPage from "./SettingsPage.svelte";
@@ -16,8 +15,8 @@
     runners: new Map(),
     selectedInstance: null,
     view: { type: "home" },
+    pageViewPath: [],
     settingsOpen: false,
-    newInstanceModal: false,
     newRunnerModal: false,
     titleBarEnabled: false,
   };
@@ -53,11 +52,6 @@
       </div>
     {/if}
   </div>
-  {#if state.newInstanceModal}
-    <div class="fixed inset-0 z-40">
-      <NewInstanceModal bind:state />
-    </div>
-  {/if}
   {#if state.newRunnerModal}
     <div class="fixed inset-0 z-40">
       <NewRunnerModal bind:state />

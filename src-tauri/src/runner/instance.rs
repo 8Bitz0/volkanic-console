@@ -33,3 +33,10 @@ pub enum VolkanicSource {
     #[serde(rename = "base64")]
     Base64(String),
 }
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct InstanceRequest {
+    pub name: String,
+    #[serde(rename = "type")]
+    pub inst_type: InstanceType,
+}
