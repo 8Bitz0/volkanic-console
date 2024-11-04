@@ -29,7 +29,7 @@
     <div class="absolute w-[512px]">
       <div class="flex flex-row text-sm items-center gap-1.5 px-4 py-2 text-zinc-700 dark:text-zinc-300">
         <button on:click={() => {state.view = { type: "home" }}} class="flex flex-row items-center justify-center rounded-md px-2 py-1 group hover:bg-zinc-200 dark:hover:bg-zinc-800 active:scale-95 transition-all duration-100 cursor-default">
-          <p class="group-hover:underline">Root</p>
+          <Icon icon="mdi:home-outline" class="w-4 h-4" />
         </button>
         {#each state.pageViewPath as segment}
           <p class="font-bold">⁄</p>

@@ -21,6 +21,11 @@
     }
   }
 
+  $: instanceName = openInstance?.name ?? "Unknown";
+  $: state.pageViewPath = [
+      { name: instanceName, view: null },
+  ];
+
   $: {
     const runner = state.runners instanceof Map ? state.runners.get(instanceRef[0]) : undefined;
     openInstance = runner?.instances instanceof Map ? runner.instances.get(instanceRef[1]) : undefined;
