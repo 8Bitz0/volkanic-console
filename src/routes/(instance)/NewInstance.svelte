@@ -44,7 +44,7 @@
     <div class="space-y-1">
       <h1 class="text-2xl font-medium">New Instance</h1>
       <p class="text-sm text-zinc-600 dark:text-zinc-400">The instance will be available after the runner has finished getting everything ready. Setup time varies by runner.</p>
-      <div class="h-2" />
+      <div class="h-2"></div>
       <div class="flex flex-row text-xs  italic space-x-2 text-zinc-600 dark:text-zinc-400">
         <p class="text-red-400">*</p>
         <p>- indicates a required question</p>

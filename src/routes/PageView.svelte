@@ -44,9 +44,9 @@
           {/if}
         {/each}
       </div>
-      <div class="w-full h-[1px] bg-gradient-to-r from-zinc-300 dark:from-zinc-700 to-transparent" />
+      <div class="w-full h-[1px] bg-gradient-to-r from-zinc-300 dark:from-zinc-700 to-transparent"></div>
     </div>
-    <div class="h-12" />
+    <div class="h-12"></div>
   {/if}
   {#if state.view.type === "home"}
     <div class="flex flex-col w-full h-full items-center gap-1 p-4 font-medium text-zinc-600 dark:text-zinc-400">
@@ -56,7 +56,7 @@
       </div>
       <div class="flex flex-row self-end items-center justify-center gap-2">
         <p class="text-xs">v{appVersion}</p>
-        <div class="w-[1px] h-full bg-gradient-to-b from-transparent via-zinc-400 dark:via-zinc-600 to-transparent" />
+        <div class="w-[1px] h-full bg-gradient-to-b from-transparent via-zinc-400 dark:via-zinc-600 to-transparent"></div>
         <button on:click={() => open('https://github.com/8Bitz0/volkanic-console')} class="hover:opacity-80 active:scale-95 transition-all">
           <Icon icon="akar-icons:github-fill" class="w-6 h-6" />
         </button>

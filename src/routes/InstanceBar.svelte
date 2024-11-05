@@ -97,13 +97,13 @@
         <InstanceButton disabled={true}>
           <Icon icon="mdi:cube-outline" />
           <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{selectedInstance[2].name}</p>
-          <div class="flex-grow" />
+          <div class="flex-grow"></div>
           <div class="relative flex flex-row items-center justify-center">
-            <div class="w-1 h-1 rounded-full bg-green-400 dark:bg-green-500" />
+            <div class="w-1 h-1 rounded-full bg-green-400 dark:bg-green-500"></div>
           </div>
         </InstanceButton>
         <!-- Separator between instance label and buttons -->
-        <div class="w-full h-[1px] bg-zinc-300 dark:bg-zinc-700" />
+        <div class="w-full h-[1px] bg-zinc-300 dark:bg-zinc-700"></div>
         <div class="w-full text-zinc-600 dark:text-zinc-400 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-all duration-100">
           <button
             on:click={() => {selectedInstance && openInstanceGeneral([selectedInstance[0], selectedInstance[1]])}}
@@ -114,7 +114,7 @@
           </button>
         </div>
         <!-- Separator between instance category buttons and action buttons -->
-        <div class="w-full h-[1px] bg-zinc-300 dark:bg-zinc-700" />
+        <div class="w-full h-[1px] bg-zinc-300 dark:bg-zinc-700"></div>
         <div class="flex flex-row h-8 gap-[1px] bg-zinc-300 dark:bg-zinc-700">
           <button class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 active:bg-zinc-300 dark:active:bg-zinc-700 transition-all cursor-default"><Icon icon="mdi:restart" /></button>
           <button class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 active:bg-zinc-300 dark:active:bg-zinc-700 transition-all cursor-default"><Icon icon="mdi:power" /></button>
@@ -127,7 +127,7 @@
       {/if}
     </div>
     <!-- Separator between instance selection and instance/runner lists -->
-    <div class="h-1" />
+    <div class="h-1"></div>
     <div>
       {#if shownInstances.length > 0}
         <p class="text-zinc-400 dark:text-zinc-600 text-[11px]">INSTANCES</p>
@@ -144,9 +144,9 @@
           >
             <Icon icon="mdi:cube-outline" />
             <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{instance[2].name}</p>
-            <div class="flex-grow" />
+            <div class="flex-grow"></div>
             <div class="relative flex flex-row items-center justify-center">
-              <div class="w-1 h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-green-400 dark:bg-green-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
+              <div class="w-1 h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-green-400 dark:bg-green-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100"></div>
               <Icon icon="mdi:arrow-right" class="absolute w-4 h-4 opacity-0 -translate-x-2 group-hover:translate-x-0 transition-all duration-100 group-hover:opacity-100 group-hover:transition-all group-hover:duration-100" />
             </div>
           </InstanceButton>
@@ -167,12 +167,12 @@
           >
             <Icon icon="mdi:cube-outline" />
             <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{details.name}</p>
-            <div class="flex-grow" />
+            <div class="flex-grow"></div>
             <div class="relative flex flex-row items-center justify-center">
               {#if details.connected}
-                <div class="w-1 h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-green-400 dark:bg-green-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
+                <div class="w-1 h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-green-400 dark:bg-green-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100"></div>
               {:else}
-                <div class="w-1 h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-zinc-400 dark:bg-zinc-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100" />
+                <div class="w-1 h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-zinc-400 dark:bg-zinc-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100"></div>
               {/if}
               <Icon icon="mdi:plus" class="absolute w-4 h-4 opacity-0 -translate-x-2 group-hover:translate-x-0 transition-all duration-100 group-hover:opacity-100 group-hover:transition-all group-hover:duration-100" />
             </div>
@@ -187,7 +187,7 @@
     >
       <Icon icon="mdi:plus" class="text-zinc-500" />
       <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis text-zinc-500">New Runner</p>
-      <div class="flex-grow" />
+      <div class="flex-grow"></div>
     </InstanceButton>
     <!-- {#if state.view.type !== "new-instance"}
       <InstanceButton
