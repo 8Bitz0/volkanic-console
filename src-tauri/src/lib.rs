@@ -1,6 +1,7 @@
 use std::{collections::HashMap, sync::Arc};
 use tauri::Manager;
 use tokio::sync::{broadcast, Mutex};
+use tracing::error;
 
 mod cmd;
 mod config;
@@ -8,6 +9,8 @@ mod runner;
 
 use config::ConfigFile;
 use runner::event::RemoteEvent;
+
+const DEBUG_MODE_VAR: &str = "VK_DEBUG";
 
 pub struct AppState {
     config: config::ConfigFile,
@@ -17,10 +20,19 @@ pub struct AppState {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub async fn run() {
+    let debug_mode = std::env::var(DEBUG_MODE_VAR) == Ok(String::from("true"));
+
+    tracing_subscriber::fmt()
+        .with_max_level({match debug_mode {
+            true => tracing::Level::DEBUG,
+            false => tracing::Level::INFO,
+        }})
+        .init();
+
     let config = match ConfigFile::new().await {
         Ok(o) => o,
         Err(e) => {
-            eprintln!("Failed to initiate config: {}", e);
+            error!("Failed to initiate config: {}", e);
             std::process::exit(1);
         }
     };
@@ -54,7 +66,7 @@ pub async fn run() {
     match r {
         Ok(_) => {}
         Err(e) => {
-            eprintln!(
+            error!(
                 "An error occurred while Volkanic Console was running: {}",
                 e
             );
