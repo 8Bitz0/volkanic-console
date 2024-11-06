@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 export interface Instance {
   name: string;
   type: InstanceType;
+  status: InstanceStatus;
 }
 
 export type InstanceType = {
@@ -10,6 +11,14 @@ export type InstanceType = {
     source: VolkanicSource
   }
 }
+
+export type InstanceStatus =
+  | "inactive"
+  | "running"
+  | { creating: number }
+  | "deleting" 
+  | "starting"
+  | "stopping";
 
 export type VolkanicSource =
   | { url: string }

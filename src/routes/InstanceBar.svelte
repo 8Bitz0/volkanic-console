@@ -2,6 +2,7 @@
   import Icon from '@iconify/svelte';
 
   import InstanceButton from './InstanceButton.svelte';
+  import InstanceStatusIcon from './(instance)/InstanceStatusIcon.svelte';
 
   import type { AppState } from "../scripts/state";
   import type { Instance } from '../scripts/instance';
@@ -98,9 +99,7 @@
           <Icon icon="mdi:cube-outline" />
           <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{selectedInstance[2].name}</p>
           <div class="flex-grow"></div>
-          <div class="relative flex flex-row items-center justify-center">
-            <div class="w-1 h-1 rounded-full bg-green-400 dark:bg-green-500"></div>
-          </div>
+          <InstanceStatusIcon status={selectedInstance[2].status} />
         </InstanceButton>
         <!-- Separator between instance label and buttons -->
         <div class="w-full h-[1px] bg-zinc-300 dark:bg-zinc-700"></div>
@@ -146,7 +145,7 @@
             <p class="max-w-[80%] overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">{instance[2].name}</p>
             <div class="flex-grow"></div>
             <div class="relative flex flex-row items-center justify-center">
-              <div class="w-1 h-1 rounded-full group-hover:opacity-0 group-hover:translate-x-2 bg-green-400 dark:bg-green-500 transition-all duration-100 group-hover:transition-all group-hover:duration-100"></div>
+              <InstanceStatusIcon status={instance[2].status} class="group-hover:opacity-0 group-hover:translate-x-2 transition-all duration-100" />
               <Icon icon="mdi:arrow-right" class="absolute w-4 h-4 opacity-0 -translate-x-2 group-hover:translate-x-0 transition-all duration-100 group-hover:opacity-100 group-hover:transition-all group-hover:duration-100" />
             </div>
           </InstanceButton>
@@ -189,24 +188,5 @@
       <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis text-zinc-500">New Runner</p>
       <div class="flex-grow"></div>
     </InstanceButton>
-    <!-- {#if state.view.type !== "new-instance"}
-      <InstanceButton
-        onClick={addInstance}
-        forceActive={false}
-      >
-        <Icon icon="mdi:plus" />
-          <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">New Instance</p>
-          <div class="flex-grow" />
-      </InstanceButton>
-    {:else}
-      <InstanceButton
-        onClick={addInstance}
-        forceActive={true}
-      >
-        <Icon icon="mdi:plus" />
-          <p class="overflow-hidden text-sm flex-grow text-nowrap text-ellipsis">New Instance</p>
-          <div class="flex-grow" />
-      </InstanceButton>
-    {/if} -->
   </div>
 </div>

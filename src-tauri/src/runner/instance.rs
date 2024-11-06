@@ -20,6 +20,10 @@ pub enum InstanceStatus {
     Inactive,
     #[serde(rename = "running")]
     Running,
+    #[serde(rename = "creating")]
+    Creating(u8),
+    #[serde(rename = "deleting")]
+    Deleting,
     #[serde(rename = "starting")]
     Starting,
     #[serde(rename = "stopping")]

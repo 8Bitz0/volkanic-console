@@ -24,7 +24,7 @@
   $: canCreate = (name !== "" && volkanicBase64 !== "");
 
   async function createInstance() {
-    newInstance(runner, {
+    await newInstance(runner, {
       name,
       type: {
         volkanic: {

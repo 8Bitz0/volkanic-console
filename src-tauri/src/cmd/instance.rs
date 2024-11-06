@@ -4,10 +4,7 @@ use tauri_plugin_dialog::DialogExt;
 
 use crate::{
     runner::instance::{
-        Instance,
-        InstanceRequest,
-        InstanceType,
-        VolkanicSource
+        Instance, InstanceRequest, InstanceStatus, InstanceType, VolkanicSource
     }, AppState
 };
 
@@ -15,6 +12,7 @@ use crate::{
 pub struct UiInstance {
     name: String,
     inst_type: UiInstanceType,
+    status: UiInstanceStatus,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -22,6 +20,22 @@ pub enum UiInstanceType {
     Volkanic {
         source: UiVolkanicSource,
     }
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub enum UiInstanceStatus {
+    #[serde(rename = "inactive")]
+    Inactive,
+    #[serde(rename = "running")]
+    Running,
+    #[serde(rename = "creating")]
+    Creating(u8),
+    #[serde(rename = "deleting")]
+    Deleting,
+    #[serde(rename = "starting")]
+    Starting,
+    #[serde(rename = "stopping")]
+    Stopping,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -34,7 +48,8 @@ impl From<Instance> for UiInstance {
     fn from(value: Instance) -> Self {
         Self {
             name: value.name,
-            inst_type: value.inst_type.into()
+            inst_type: value.inst_type.into(),
+            status: value.status.into(),
         }
     }
 }
@@ -44,6 +59,31 @@ impl From<InstanceType> for UiInstanceType {
         match value {
             InstanceType::Volkanic { source } => {
                 UiInstanceType::Volkanic { source: source.into() }
+            }
+        }
+    }
+}
+
+impl From<InstanceStatus> for UiInstanceStatus {
+    fn from(value: InstanceStatus) -> Self {
+        match value {
+            InstanceStatus::Inactive => {
+                UiInstanceStatus::Inactive
+            }
+            InstanceStatus::Running => {
+                UiInstanceStatus::Running
+            }
+            InstanceStatus::Creating(progress) => {
+                UiInstanceStatus::Creating(progress)
+            }
+            InstanceStatus::Deleting => {
+                UiInstanceStatus::Deleting
+            }
+            InstanceStatus::Starting => {
+                UiInstanceStatus::Starting
+            }
+            InstanceStatus::Stopping => {
+                UiInstanceStatus::Stopping
             }
         }
     }

@@ -26,17 +26,6 @@ pub async fn event_listen(runner: Arc<Runner>) {
         loop {
             let url = url.clone();
 
-            debug!("Refreshing everything");
-
-            match runner.update_all().await {
-                Ok(_) => {},
-                Err(e) => {
-                    error!("An error occurred while updating all instances: {}", e);
-                    wait().await;
-                    continue;
-                }
-            };
-
             loop {
                 debug!("Checking if connected");
                 let connected = *runner.connected.lock().await;
@@ -73,6 +62,16 @@ pub async fn event_listen(runner: Arc<Runner>) {
             };
 
             debug!("SSE request succeeded");
+            debug!("Refreshing everything");
+
+            match runner.update_all().await {
+                Ok(_) => {},
+                Err(e) => {
+                    error!("An error occurred while updating all instances: {}", e);
+                    wait().await;
+                    continue;
+                }
+            };
             
             let mut stream = r.bytes_stream();
 
