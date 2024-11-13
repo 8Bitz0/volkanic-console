@@ -3,7 +3,7 @@
 
   import RoundButton from "./RoundButton.svelte";
 
-  import { type AppState } from "../scripts/State";
+  import { type AppState } from "../scripts/state";
 
   export let state: AppState;
 

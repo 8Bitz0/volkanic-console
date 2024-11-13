@@ -2,21 +2,21 @@
   import "../app.css";
 
   import InstanceBar from "./InstanceBar.svelte";
-  import NewInstanceModal from "./NewInstanceModal.svelte";
   import NewRunnerModal from "./NewRunnerModal.svelte";
   import PageView from "./PageView.svelte";
   import SettingsPage from "./SettingsPage.svelte";
   import TitleBar from "./TitleBar.svelte";
 
-  import type { AppState } from "../scripts/State";
-  import { runnerListener } from "../scripts/Event";
-  import { listRunners, type Runner } from "../scripts/Runner";
+  import type { AppState } from "../scripts/state";
+  import { runnerListener } from "../scripts/event";
+  import { listRunners, type Runner } from "../scripts/runner";
 
   let state: AppState = {
     runners: new Map(),
     selectedInstance: null,
+    view: { type: "home" },
+    pageViewPath: [],
     settingsOpen: false,
-    newInstanceModal: false,
     newRunnerModal: false,
     titleBarEnabled: false,
   };
@@ -38,25 +38,20 @@
   });
 </script>
 
-<div class="absolute w-full h-full bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50">
+<div class="absolute w-full h-full bg-zinc-100 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50 flex flex-col">
   <TitleBar bind:state />
-  <div class="flex flex-row w-full h-full flex-grow">
+  <div class="flex-1">
     {#if state.settingsOpen}
-      <div class="w-full h-full">
+      <div class="h-full">
         <SettingsPage bind:state />
       </div>
     {:else}
-      <div class="flex flex-row w-full h-full">
+      <div class="flex flex-row h-full">
         <InstanceBar bind:state />
         <PageView bind:state />
       </div>
     {/if}
   </div>
-  {#if state.newInstanceModal}
-    <div class="fixed inset-0 z-40">
-      <NewInstanceModal bind:state />
-    </div>
-  {/if}
   {#if state.newRunnerModal}
     <div class="fixed inset-0 z-40">
       <NewRunnerModal bind:state />

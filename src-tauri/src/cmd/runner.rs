@@ -7,6 +7,7 @@ use tauri::{
 };
 use tauri_plugin_dialog::DialogExt;
 use tokio::sync::Mutex;
+use tracing::info;
 use uuid::Uuid;
 
 use super::instance::UiInstance;
@@ -97,7 +98,7 @@ async fn m_runner_new(app: Arc<AppHandle>, name: String, url: String) -> Result<
 
     state.runners.lock().await.insert(uuid, runner.clone());
 
-    println!("Added runner (\"{}\")", name);
+    info!("Added runner (\"{}\")", name);
 
     tokio::spawn(async move {
         loop {

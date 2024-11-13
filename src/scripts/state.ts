@@ -1,11 +1,12 @@
-import type { Instance } from "./Instance";
-import type { Runner } from "./Runner";
+import type { Runner } from "./runner";
+import type { View } from "./view";
 
 export interface AppState {
   runners: Map<string, Runner>;
   selectedInstance: [string, string] | null;
+  view: View;
+  pageViewPath: { name: string, view: View | null }[];
   settingsOpen: boolean;
-  newInstanceModal: boolean;
   newRunnerModal: boolean;
   titleBarEnabled: boolean;
 }

@@ -3,12 +3,13 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{collections::HashMap, sync::Arc};
 use tokio::{sync::{broadcast, Mutex}, time};
+use tracing::{debug, info, error};
 
 pub mod event;
 pub mod instance;
 mod http;
 
-use instance::Instance;
+use instance::{Instance, InstanceRequest};
 
 pub use http::is_valid_url;
 use http::new_client;
@@ -26,7 +27,7 @@ pub struct RunnerConDetails {
 pub struct Runner {
     details: Mutex<RunnerConDetails>,
     update: broadcast::Sender<()>,
-    disconnect_tx: broadcast::Sender<String>,
+    status_tx: broadcast::Sender<bool>,
     connected: Mutex<bool>,
     instances: Mutex<HashMap<String, Instance>>,
 }
@@ -80,20 +81,20 @@ impl Runner {
         let info_value =
             serde_json::from_str::<Value>(&info_raw).map_err(|_| Error::ResponseDecode)?;
 
-        println!("Got remote info: {}", &info_raw);
+        info!("Got remote info: {}", &info_raw);
 
         let protocol = match info_value["protocol"].as_u64() {
             Some(p) => p,
             None => {
-                eprintln!("Remote doesn't specify valid protocol");
+                error!("Remote doesn't specify valid protocol");
                 return Err(Error::NotVolkanicRunner);
             }
         };
 
         if protocol == SUPPORTED_PROTOCOL {
-            println!("Remote protocol matched");
+            info!("Remote protocol matched");
         } else {
-            eprintln!(
+            error!(
                 "Remote protocol mismatch (expected: {}, found: {})",
                 SUPPORTED_PROTOCOL, protocol
             );
@@ -113,12 +114,10 @@ impl Runner {
             // Only the sender is necessary since the receiver can be obtained
             // by calling the `subscribe()` method.
             update: broadcast::channel(255).0,
-            disconnect_tx: broadcast::channel(1).0,
+            status_tx: broadcast::channel(255).0,
             connected: Mutex::new(true),
             instances: Mutex::new(HashMap::new()),
         });
-
-        runner.update_instances().await?;
 
         Self::start_bg(runner.clone()).await;
 
@@ -131,13 +130,10 @@ impl Runner {
 
         Ok(())
     }
-    pub async fn wait_for_close(&self) -> String {
-        let mut rx = self.disconnect_tx.subscribe();
+    pub async fn wait_for_status(&self) -> bool {
+        let mut rx = self.status_tx.subscribe();
 
-        match rx.recv().await {
-            Ok(o) => o,
-            Err(e) => format!("Receiver error: {}", e),
-        }
+        rx.recv().await.unwrap()
     }
     pub async fn get_name(&self) -> String {
         self.details.lock().await.name.to_string()
@@ -153,8 +149,16 @@ impl Runner {
     pub async fn get_instances(&self) -> HashMap<String, Instance> {
         self.instances.lock().await.clone()
     }
+    pub async fn update_all(&self) -> Result<(), Error> {
+        debug!("Updating all instances");
+        self.update_instances().await?;
+
+        Ok(())
+    }
     pub async fn update_instances(&self) -> Result<(), Error> {
         let client = new_client().map_err(Error::Http)?;
+
+        debug!("Client requested, grabbing instances...");
 
         let instances_raw = client
             .get(format!("{}/instance/list", self.details.lock().await.url))
@@ -165,14 +169,46 @@ impl Runner {
             .await
             .map_err(Error::Http)?;
 
+        debug!("Got instance list: {}", &instances_raw);
+
         let instances = serde_json::from_str(&instances_raw).map_err(|_| Error::ResponseDecode)?;
 
+        debug!("Decoded instance list");
+
         *self.instances.lock().await = instances;
+
+        let _ = self.update.send(());
+
+        Ok(())
+    }
+    pub async fn del_instance(&self, id: String) -> Result<(), Error> {
+        let client = new_client().map_err(Error::Http)?;
+
+        client
+            .post(format!("{}/instance/{}/delete", self.details.lock().await.url, id))
+            .send()
+            .await
+            .map_err(Error::Http)?;
+
+        Ok(())
+    }
+    pub async fn new_instance(&self, instance: InstanceRequest) -> Result<(), Error> {
+        let client = new_client().map_err(Error::Http)?;
+
+        client
+            .post(format!("{}/instance/new", self.details.lock().await.url))
+            .json(&instance)
+            .send()
+            .await
+            .map_err(Error::Http)?;
 
         Ok(())
     }
     pub fn send_update(&self) {
         let _ = self.update.send(());
+    }
+    pub fn send_status(&self, status: bool) {
+        let _ = self.status_tx.send(status);
     }
     async fn heartbeat(&self) -> bool {
         let client = match new_client() {
@@ -200,9 +236,15 @@ impl Runner {
             loop {
                 let connected = runner.heartbeat().await;
 
+                let old_connected = *runner.connected.lock().await;
                 *runner.connected.lock().await = connected;
 
-                runner.send_update();
+                if connected != old_connected {
+                    // Send update to all listeners
+                    runner.send_update();
+                    // Send new connection status to all listeners
+                    runner.send_status(connected);
+                }
     
                 time::sleep(time::Duration::from_millis(
                     if connected {

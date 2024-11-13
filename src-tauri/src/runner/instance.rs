@@ -20,6 +20,10 @@ pub enum InstanceStatus {
     Inactive,
     #[serde(rename = "running")]
     Running,
+    #[serde(rename = "creating")]
+    Creating(u8),
+    #[serde(rename = "deleting")]
+    Deleting,
     #[serde(rename = "starting")]
     Starting,
     #[serde(rename = "stopping")]
@@ -32,4 +36,11 @@ pub enum VolkanicSource {
     Url(String),
     #[serde(rename = "base64")]
     Base64(String),
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct InstanceRequest {
+    pub name: String,
+    #[serde(rename = "type")]
+    pub inst_type: InstanceType,
 }
