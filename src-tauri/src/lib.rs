@@ -1,7 +1,8 @@
 use std::{collections::HashMap, sync::Arc};
 use tauri::Manager;
+use tauri_plugin_sentry::sentry;
 use tokio::sync::{broadcast, Mutex};
-use tracing::error;
+use tracing::{debug, error};
 
 mod cmd;
 mod config;
@@ -16,6 +17,7 @@ pub struct AppState {
     config: config::ConfigFile,
     runners: Arc<Mutex<HashMap<String, Arc<runner::Runner>>>>,
     event_listener: broadcast::Sender<RemoteEvent>,
+    sentry_guard: Arc<Mutex<Option<sentry::ClientInitGuard>>>,
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -41,11 +43,33 @@ pub async fn run() {
         config,
         runners: Arc::new(Mutex::new(HashMap::new())),
         event_listener: broadcast::channel(4096).0,
+        sentry_guard: Arc::new(Mutex::new(None)),
     };
 
-    let r = tauri::Builder::default()
+    // This isn't very secure, as the DSN is exposed within the binary
+    let sentry_dsn = option_env!("SENTRY_DSN");
+
+    let mut tauri_app = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_shell::init());
+
+    if let Some(dsn) = sentry_dsn {
+        debug!("Sentry enabled");
+        let client = sentry::init((
+            dsn,
+            sentry::ClientOptions {
+                release: sentry::release_name!(),
+                debug: false,
+                ..Default::default()
+            },
+        ));
+        tauri_app = tauri_app.plugin(tauri_plugin_sentry::init(&client));
+        *state.sentry_guard.lock().await = Some(client);
+    } else {
+        debug!("Sentry disabled");
+    };
+
+    let r = tauri_app
         .setup(|app| {
             app.manage(state);
 
@@ -62,6 +86,17 @@ pub async fn run() {
             cmd::runner::runner_new,
         ])
         .run(tauri::generate_context!());
+    
+        match r {
+            Ok(_) => {}
+            Err(e) => {
+                error!(
+                    "An error occurred while Volkanic Console was running: {}",
+                    e
+                );
+                std::process::exit(1);
+            }
+        }
 
     match r {
         Ok(_) => {}
