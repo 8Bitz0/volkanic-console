@@ -16,21 +16,21 @@ name = "volkanic_console_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2.0.2", features = [] }
+tauri-build = { version = "2.0.3", features = [] }
 
 [dependencies]
-tauri = { version = "2.0.6", features = [] }
+tauri = { version = "2.1.1", features = [] }
 tauri-plugin-shell = "2.0.2"
-serde = { version = "1.0.214", features = ["derive"] }
+serde = { version = "1.0.215", features = ["derive"] }
 serde_json = "1.0.132"
-thiserror = "1.0.65"
+thiserror = "2.0.3"
 reqwest = "0.12.9"
-tokio = { version = "1.41.0", features = ["fs", "macros", "rt", "sync", "time"] }
+tokio = { version = "1.41.1", features = ["fs", "macros", "rt", "sync", "time"] }
 serde_jsonc = "1.0.108"
 dirs = "5.0.1"
 uuid = { version = "1.11.0", features = ["v4"] }
 tauri-plugin-dialog = "2"
-url = "2.5.2"
+url = "2.5.3"
 futures-util = "0.3.31"
 tracing = "0.1.40"
 tracing-subscriber = "0.3.18"
