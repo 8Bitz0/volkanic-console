@@ -49,6 +49,6 @@
   {:else if status === "stopping"}
     <div class="w-1 h-1 rounded-full bg-yellow-400 dark:bg-yellow-500"></div>
   {:else if status === "deleting"}
-    <div class="w-1 h-1 rounded-full bg-red-400 dark:bg-red-500"></div>
+    <Icon icon="svg-spinners:90-ring-with-bg" class="w-4 h-4 text-red-500 dark:text-red-400" />
   {/if}
 </div>

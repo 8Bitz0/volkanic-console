@@ -5,7 +5,7 @@
   import InstanceStatusIcon from './(instance)/InstanceStatusIcon.svelte';
 
   import type { AppState } from "../scripts/state";
-  import type { Instance } from '../scripts/instance';
+  import { type Instance, startInstance, stopInstance } from '../scripts/instance';
   import type { Runner } from '../scripts/runner';
 
   export let state: AppState;
@@ -20,6 +20,16 @@
 
   function addRunner() {
     state.newRunnerModal = true;
+  }
+
+  async function toggleInstance() {
+    if (selectedInstance) {
+      if (selectedInstance[2].status === "inactive") {
+        await startInstance(selectedInstance[0], selectedInstance[1]);
+      } else {
+        await stopInstance(selectedInstance[0], selectedInstance[1]);
+      }
+    }
   }
 
   function openInstanceGeneral(instance: [string, string]) {
@@ -116,7 +126,15 @@
         <div class="w-full h-[1px] bg-zinc-300 dark:bg-zinc-700"></div>
         <div class="flex flex-row h-8 gap-[1px] bg-zinc-300 dark:bg-zinc-700">
           <button class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 active:bg-zinc-300 dark:active:bg-zinc-700 transition-all cursor-default"><Icon icon="mdi:restart" /></button>
-          <button class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 active:bg-zinc-300 dark:active:bg-zinc-700 transition-all cursor-default"><Icon icon="mdi:power" /></button>
+          {#if selectedInstance[2].status === "inactive"}
+            <button on:click={toggleInstance} class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 active:bg-zinc-300 dark:active:bg-zinc-700 transition-all cursor-default"><Icon icon="mdi:play-outline" /></button>
+          {:else if selectedInstance[2].status === "running"}
+            <button on:click={toggleInstance} class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 active:bg-zinc-300 dark:active:bg-zinc-700 transition-all cursor-default"><Icon icon="mdi:power" /></button>
+          {:else if selectedInstance[2].status === "starting"}
+          <button class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 text-zinc-500 cursor-default"><Icon icon="mdi:play-outline" /></button>
+          {:else}
+            <button class="flex flex-col w-full h-auto items-center justify-center bg-zinc-100 dark:bg-zinc-900 text-zinc-500 cursor-default"><Icon icon="mdi:power" /></button>
+          {/if}
         </div>
       {:else}
         <div class="flex flex-col w-full h-[65px] min-[65px] items-center justify-center text-zinc-400 dark:text-zinc-500">

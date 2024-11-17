@@ -80,6 +80,8 @@ pub async fn run() {
             host_platform,
             cmd::instance::del_instance,
             cmd::instance::new_instance,
+            cmd::instance::start_instance,
+            cmd::instance::stop_instance,
             cmd::misc::is_valid_url,
             cmd::runner::runner_info,
             cmd::runner::runner_list,
