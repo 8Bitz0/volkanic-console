@@ -42,3 +42,11 @@ export async function delInstance(runner: string, instance: string) {
 export async function newInstance(runner: string, instance: InstanceRequest) {
   await invoke("new_instance", { runner, instance });
 }
+
+export async function startInstance(runner: string, instance: string) {
+  await invoke("start_instance", { runner, instance });
+}
+
+export async function stopInstance(runner: string, instance: string) {
+  await invoke("stop_instance", { runner, instance });
+}

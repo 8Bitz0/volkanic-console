@@ -204,10 +204,32 @@ impl Runner {
 
         Ok(())
     }
-    pub fn send_update(&self) {
+    pub async fn start_instance(&self, id: String) -> Result<(), Error> {
+        let client = new_client().map_err(Error::Http)?;
+
+        client
+            .post(format!("{}/instance/{}/start", self.details.lock().await.url, id))
+            .send()
+            .await
+            .map_err(Error::Http)?;
+
+        Ok(())
+    }
+    pub async fn stop_instance(&self, id: String) -> Result<(), Error> {
+        let client = new_client().map_err(Error::Http)?;
+
+        client
+            .post(format!("{}/instance/{}/stop", self.details.lock().await.url, id))
+            .send()
+            .await
+            .map_err(Error::Http)?;
+
+        Ok(())
+    }
+    fn send_update(&self) {
         let _ = self.update.send(());
     }
-    pub fn send_status(&self, status: bool) {
+    fn send_status(&self, status: bool) {
         let _ = self.status_tx.send(status);
     }
     async fn heartbeat(&self) -> bool {
