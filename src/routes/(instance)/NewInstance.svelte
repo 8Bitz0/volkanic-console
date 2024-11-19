@@ -66,6 +66,11 @@
           autocapitalize="off"
           spellcheck="false"
           class="w-56 h-8 border-[1px] border-zinc-200 dark:border-zinc-700 rounded-lg p-2 bg-zinc-50 dark:bg-zinc-900"
+          on:keydown={(k) => {
+            if (k.key === "Enter") {
+              baseInput.select();
+            }
+          }}
         />
       </div>
       <div class="flex flex-row w-full items-center gap-2 px-4 py-3">
@@ -81,6 +86,11 @@
           bind:value={volkanicBase64}
           type="text"
           class="w-56 h-8 border-[1px] border-zinc-200 dark:border-zinc-700 rounded-lg p-2 bg-zinc-50 dark:bg-zinc-900"
+          on:keydown={(k) => {
+            if (k.key === "Enter" && canCreate) {
+              createInstance();
+            }
+          }}
         />
       </div>
     </div>
