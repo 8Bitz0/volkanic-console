@@ -12,12 +12,10 @@
   let nameInput: HTMLInputElement;
   let baseInput: HTMLInputElement;
 
-  let currentRunner: Runner | undefined = state.runners.get(runner);
-
   let canCreate: boolean = false;
 
   $: state.pageViewPath = [
-    { name: currentRunner?.name ?? "Unknown", view: null },
+    { name: state.runners.get(runner)?.name ?? "Unknown", view: null },
     { name: "New Instance", view: null },
   ];
 
