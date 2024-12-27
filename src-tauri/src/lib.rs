@@ -1,7 +1,7 @@
 use std::{collections::HashMap, sync::Arc};
 use tauri::Manager;
 use tauri_plugin_sentry::sentry;
-use tokio::sync::{broadcast, Mutex};
+use tokio::sync::Mutex;
 use tracing::{debug, error};
 
 mod cmd;
@@ -9,14 +9,11 @@ mod config;
 mod runner;
 
 use config::ConfigFile;
-use runner::event::RemoteEvent;
 
 const DEBUG_MODE_VAR: &str = "VK_DEBUG";
 
 pub struct AppState {
-    config: config::ConfigFile,
     runners: Arc<Mutex<HashMap<String, Arc<runner::Runner>>>>,
-    event_listener: broadcast::Sender<RemoteEvent>,
     sentry_guard: Arc<Mutex<Option<sentry::ClientInitGuard>>>,
 }
 
@@ -31,7 +28,7 @@ pub async fn run() {
         }})
         .init();
 
-    let config = match ConfigFile::new().await {
+    let _config = match ConfigFile::new().await {
         Ok(o) => o,
         Err(e) => {
             error!("Failed to initiate config: {}", e);
@@ -40,9 +37,7 @@ pub async fn run() {
     };
 
     let state = AppState {
-        config,
         runners: Arc::new(Mutex::new(HashMap::new())),
-        event_listener: broadcast::channel(4096).0,
         sentry_guard: Arc::new(Mutex::new(None)),
     };
 
