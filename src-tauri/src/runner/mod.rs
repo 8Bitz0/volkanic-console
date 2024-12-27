@@ -34,16 +34,10 @@ pub struct Runner {
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("{0}")]
-    GenericIo(std::io::Error),
     #[error("HTTP error: {0}")]
     Http(reqwest::Error),
-    #[error("Invalid URL: {0}")]
-    InvalidUrl(String),
     #[error("Response decode error")]
     ResponseDecode,
-    #[error("Request encode error")]
-    RequestEncode,
     #[error("Not a Volkanic Runner")]
     NotVolkanicRunner,
     #[error("Protocol version mismatch (found {0}, expected {1})")]
