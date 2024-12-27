@@ -23,17 +23,9 @@ pub enum Error {
     NoConfigDir,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 pub struct Config {
     pub runners: HashMap<String, RunnerConDetails>,
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            runners: HashMap::new(),
-        }
-    }
 }
 
 pub struct ConfigFile {
